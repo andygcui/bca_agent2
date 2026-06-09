@@ -1,0 +1,3311 @@
+{
+  "source_file": "workbook_v1.xlsx",
+  "mode": "template",
+  "sheet_count": 20,
+  "sheet_names": [
+    "Overview",
+    "Project Information",
+    "Parameter Values",
+    "User Volumes",
+    "Capital Costs",
+    "Operations and Maintenance",
+    "Safety",
+    "Travel Time Savings",
+    "Vehicle Operating Cost Savings",
+    "Emissions Reduction",
+    "Other Highway Use Externalities",
+    "Amenity Benefits",
+    "Health Benefits",
+    "Residual Value",
+    "Other Benefit 1",
+    "Other Benefit 2",
+    "Other Benefit 3",
+    "Other Benefit 4",
+    "Summary",
+    "Final Results"
+  ],
+  "sheets": {
+    "Overview": [
+      [
+        "USDOT Benefit-Cost Analysis Spreadsheet Template"
+      ],
+      [
+        "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+      ],
+      [
+        "What is the USDOT Benefit-Cost Analysis Spreadsheet Template?"
+      ],
+      [
+        "The USDOT Benefit-Cost Analysis Spreadsheet Template is being offered as a resource to applicants to help them get started on their BCA. Applicants are NOT required to use this template, it is simply offered as a convenience."
+      ],
+      [
+        "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+      ],
+      [
+        "What You Need"
+      ],
+      [
+        "•\t  Understanding of the project and the problem it is intended to solve."
+      ],
+      [
+        "•\t  The estimated costs of the project."
+      ],
+      [
+        "•\t  Information needed to estimate the benefits of the project (e.g., number users, baseline conditions, measures of effectiveness, expected service life)."
+      ],
+      [
+        "=HYPERLINK(\"https://www.transportation.gov/mission/office-secretary/office-policy/transportation-policy/benefit-cost-analysis-guidance\", \"See USDOT BCA Guidance for full details.\")"
+      ],
+      [
+        "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+      ],
+      [
+        "Notes"
+      ],
+      [
+        "• Input, Optional, and No-Input cells."
+      ],
+      [
+        "o Green, bold, and underlined cells represent user input cells. These cells are available for input from the user."
+      ],
+      [
+        "o Blue and italic cells represent cells where the user may want to edit the formula depending on their project details"
+      ],
+      [
+        "o Gray and plain text cells represent a cell that does not require user input, and should not be edited."
+      ],
+      [
+        "•  \tBuild vs No Build. If you only have data for the difference between the Build and No Build scenarios, enter this data into the \"Build\" column and leave the \"No Build\" values at $0. This will still appropriately estimate the benefit"
+      ],
+      [
+        "•  \tDeleting a Tab. Do not delete tabs. If a tab is not needed, simply skip it."
+      ],
+      [
+        "•  Parameter Values. This template provides a copy of the Appendix A tables from the USDOT BCA guidance document in a spreadsheet format, located on the \"Parameter Values\" sheet."
+      ],
+      [
+        "Model Base Year"
+      ],
+      [
+        "Model Date",
+        "2025-12-23 00:00:00"
+      ]
+    ],
+    "Project Information": [
+      [
+        "Project Information"
+      ],
+      [
+        "Applicants should fill out this sheet first, before moving on to the remainder of the template sheets."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Project Information"
+      ],
+      [
+        "Variable",
+        "Value"
+      ],
+      [
+        "Model Base Year",
+        "=Overview!B22"
+      ],
+      [
+        "First Year of Project Development/Construction",
+        "<-For project development costs prior to the model base year, enter into the \"Capital Cost\" tab in the cell for previously incurred costs"
+      ],
+      [
+        "Length of Construction/Project Development Period (in Years)",
+        "<-Enter a whole number value between 1 and 15, only include project development years after the model base year"
+      ],
+      [
+        "Opening Year",
+        "=B7+B8"
+      ],
+      [
+        "Operational Period Length",
+        "<-See USDOT BCA Guidance for discussion of how to determine the appropriate operational period length"
+      ],
+      [
+        "Final Analysis Year",
+        "=B7+B8+B10-1"
+      ],
+      [
+        "Project Name",
+        "Marriottsville Road & Bridge Improvement (Phases II & IV)"
+      ],
+      [
+        "Project Sponsor",
+        "Howard County, Maryland"
+      ],
+      [
+        "Grant Program",
+        "BUILD FY2026"
+      ],
+      [
+        "Location",
+        "Marriottsville Road over I-70, Howard County, MD"
+      ],
+      [
+        "BCA Base Year",
+        "2024"
+      ],
+      [
+        "Discount Rate",
+        "7.0%"
+      ],
+      [
+        "Traffic Growth Rate",
+        "1.5%/yr (capped 2045)"
+      ],
+      [
+        "AADT at Opening (2029)"
+      ],
+      [
+        "CMF Used",
+        "0.80 (20% crash reduction)"
+      ]
+    ],
+    "Parameter Values": [
+      [
+        "Parameter Values"
+      ],
+      [
+        "This sheet provides a copy of parameter and monetization values from Appendix A of the USDOT BCA Guidance, and is provided for convenience."
+      ],
+      [
+        "Source: USDOT BCA Guidance (Appendix A)"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-1a: Value of Reduced Fatalities, Injuries, and Crashes"
+      ],
+      [
+        "KABCO Level",
+        "Monetized Value (2024 $)"
+      ],
+      [
+        "O - No Injury"
+      ],
+      [
+        "C - Possible Injury"
+      ],
+      [
+        "B - Non-incapacitating"
+      ],
+      [
+        "A - Incapacitating"
+      ],
+      [
+        "K - Killed"
+      ],
+      [
+        "U - Injured (Severity Unknown)"
+      ],
+      [
+        "Table A-1b: Value of Reduced Fatal, Injury, and PDO Crashes"
+      ],
+      [
+        "Crash Type",
+        "Monetized Value (2024 $)"
+      ],
+      [
+        "PDO Crash"
+      ],
+      [
+        "Injury Crash"
+      ],
+      [
+        "Fatal Crash"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-2: Value of Travel Time Savings"
+      ],
+      [
+        "Recommended Hourly Values of Travel Time Savings"
+      ],
+      [
+        "(2024 $ per person-hour)"
+      ],
+      [
+        "Category",
+        "Hourly Value"
+      ],
+      [
+        "General Travel Time"
+      ],
+      [
+        "Personal1"
+      ],
+      [
+        "Business2"
+      ],
+      [
+        "All Purpose3"
+      ],
+      [
+        "Walking, Cycling, Waiting, Standing, and Transfer Time4"
+      ],
+      [
+        "Commercial Vehicle Operators5"
+      ],
+      [
+        "Truck Drivers"
+      ],
+      [
+        "Bus Drivers"
+      ],
+      [
+        "Transit Rail Operators"
+      ],
+      [
+        "Locomotive Engineers"
+      ],
+      [
+        "1)  Values for personal travel based on local travel values as described in USDOT’s Value of Travel Time guidance. Where applicants also have specific information on the mix of local versus long-distance travel (i.e., trips over 50 miles in length) on a facility, then the local travel values of time may be blended with the long-distance personal travel value of $28.20 per hour."
+      ],
+      [
+        "2)  Weighted average based on a typical distribution of local travel by surface modes (88.2% personal, 11.8% business). Applicants should apply their own distribution of business versus personal travel where such information is available."
+      ],
+      [
+        "3)  Note that business travel does not include commuting travel, which should be valued at the personal travel rate. Travel on high-speed rail service that would be competitive with air travel should be valued at $53.50 per hour for personal travel and $86.00 for business travel."
+      ],
+      [
+        "4)  Should be applied only when actions affect those elements of travel time."
+      ],
+      [
+        "5)  Includes only the value of time for the operator, not passengers or freight."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-3: Average Vehicle Occupancy Rates for Highway Passenger Vehicles"
+      ],
+      [
+        "Vehicle Type",
+        "Average Occupancy"
+      ],
+      [
+        "Passenger Vehicles (Weekday Peak)1"
+      ],
+      [
+        "Passenger Vehicles (Weekday Off-Peak)"
+      ],
+      [
+        "Passenger Vehicles (Weekend)"
+      ],
+      [
+        "Passenger Vehicles (All Travel)"
+      ],
+      [
+        "1) Weekday peak period values calculated for trips starting between 6:00 AM-8:59 AM and 4:00 PM-6:59 PM."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-4: Vehicle Operating Costs"
+      ],
+      [
+        "Vehicle Type",
+        "Recommended Value per Mile (2024 $)"
+      ],
+      [
+        "Light Duty Vehicles1"
+      ],
+      [
+        "Commercial Trucks2"
+      ],
+      [
+        "1)  Based on an average light duty vehicle and includes operating costs such as gasoline, maintenance, tires, and depreciation (assuming an average of 15,000 miles driven per year). The value omits other ownership costs that are mostly fixed or transfers (insurance, license, registration, taxes, and financing charges)."
+      ],
+      [
+        "2)  Value includes fuel costs, truck/trailer lease or purchase payments, repair and maintenance, truck insurance premiums, permits and licenses, and tires. The value omits tolls (which are transfers), and driver wages and benefits (which are already included in the value of travel time savings)."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-5: Train Operating and Social Costs"
+      ],
+      [
+        "Recommended Value per Hour (2024 $)"
+      ],
+      [
+        "Train and Movement Type",
+        "Operating Costs1",
+        "Emission Costs2"
+      ],
+      [
+        "Idling"
+      ],
+      [
+        "Freight Train"
+      ],
+      [
+        "Commuter Train"
+      ],
+      [
+        "Amtrak Long-Distance"
+      ],
+      [
+        "Amtrak State-Supported"
+      ],
+      [
+        "Hauling"
+      ],
+      [
+        "Freight Train"
+      ],
+      [
+        "Commuter Train"
+      ],
+      [
+        "Amtrak Long-Distance"
+      ],
+      [
+        "Amtrak State-Supported"
+      ],
+      [
+        "All Movements"
+      ],
+      [
+        "Freight Railcar",
+        "*"
+      ],
+      [
+        "1)  Includes fuel cost, depreciation, and labor cost."
+      ],
+      [
+        "2)  Emissions are based on the current diesel-electric locomotive fleet average, and thus the emission values above should not be applied in cases where new locomotives are being acquired or in cases of electrified rail. The monetization applies the 2035-year emission value to approximate increasing emission damage costs over time."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-6: Damage Costs for Emissions per Metric Ton*"
+      ],
+      [
+        "Emission Type",
+        "NOX",
+        "SOX",
+        "PM2.5**"
+      ],
+      [
+        "*Applicants should carefully note whether their emissions data is reported in short tons or metric tons. A metric ton is equal to 1.1023 short tons."
+      ],
+      [
+        "**Applicants should be careful to not apply the PM2.5 value to estimates of total emissions of PM10."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-7: Inflation Adjustment Values"
+      ],
+      [
+        "Base Year of Nominal Dollar",
+        "Multiplier to Adjust to Real 2024 $"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-8: Pedestrian Facility Improvements Revealed Preference Values"
+      ],
+      [
+        "Improvement Type",
+        "Recommended Value per Person-Mile Walked (2024 $)1"
+      ],
+      [
+        "Expand Sidewalk (per foot of added width)2"
+      ],
+      [
+        "Reducing Upslope by 1%"
+      ],
+      [
+        "Reducing Traffic Speed by 1 mph (for speeds ≤45 mph)"
+      ],
+      [
+        "Reducing Traffic Volume by 1 Vehicle per Hour (for ADT <55,000)"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Improvement Type",
+        "Recommended Value per Use (2024 $)1"
+      ],
+      [
+        "Install Marked-Crosswalk on Roadway with Volumes ≥10,000 Vehicle per Day"
+      ],
+      [
+        "Install Signal for Pedestrian Crossing on Roadway with Volumes ≥13,000 Vehicles per Day"
+      ],
+      [
+        "1)   These values assume an average walking trip speed of 3.2 miles per hour. For the mile-based benefits, the estimated value per user should be capped at 0.86 miles, the average length of a walking trip in the 2017 National Household Travel Survey, unless the applicant has specific documentation suggesting longer trips or that a trip shorter than 0.86 miles is not feasible on the facility in question. In other words, applicants should not assume all pedestrians travel the full distance of a proposed facility if the facility is longer than 0.86 miles without a clear justification for doing so."
+      ],
+      [
+        "2)   Value for sidewalk width expansion applicable for sidewalks up to approximately 31 feet, benefits for expansions beyond this width should be described qualitatively."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-9: Cycling Facility Improvement Revealed Preference Values"
+      ],
+      [
+        "Facility Type",
+        "Recommended Value per Cycling Mile (2024 $)1"
+      ],
+      [
+        "Cycling Path with At-Grade Crossings"
+      ],
+      [
+        "Cycling Path with no At-Grade Crossings2"
+      ],
+      [
+        "Dedicated Cycling Lane"
+      ],
+      [
+        "Cycling Boulevard/“Sharrow”"
+      ],
+      [
+        "Separated Cycle Track"
+      ],
+      [
+        "1) Values should only be applied over sections for which a comparable parallel facility is not available, and only applies to miles cycled on the project facility. These values assume an average cycling trip speed of 9.8 miles per hour or, in the case of off-street paths with no at-grade crossings, a free-flow cycling speed of 12.1 miles per hour. The estimated value per cyclist should be capped at 2.38 miles, the average length of a cycling trip in the 2017 National Household Travel Survey, unless the applicant has specific documentation suggesting longer trips or that a trip shorter than 2.38 miles is not feasible on the facility in question. In other words, applicants should not assume all cyclists travel the full distance of a proposed facility if the facility is longer than 2.38 miles without a clear justification for doing so."
+      ],
+      [
+        "2) The value for a cycling path with no at-grade intersections is higher due to an assumption of higher average speed of 12.1 miles per hour, resulting in less time on the facility, which lowers journey quality benefits but increases travel time savings."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-10: Transit Facility Amenity Revealed and Stated Preference Values"
+      ],
+      [
+        "Attribute Type",
+        "Recommended Value per User Trip (2024 $)"
+      ],
+      [
+        "Bus Stop",
+        "Light Rail /Streetcar Stop",
+        "Rail Station"
+      ],
+      [
+        "Clocks"
+      ],
+      [
+        "Electronic Real-Time Information Displays"
+      ],
+      [
+        "Information /Emergency Button"
+      ],
+      [
+        "PA System"
+      ],
+      [
+        "Platform/Stop Seating Availability1"
+      ],
+      [
+        "Platform/Stop Weather Protection1"
+      ],
+      [
+        "Restroom Availability"
+      ],
+      [
+        "Retail/Food Outlet Availability"
+      ],
+      [
+        "Staff Availability"
+      ],
+      [
+        "Step-Free Access to Station/Stop"
+      ],
+      [
+        "Step-Free Access to Vehicle"
+      ],
+      [
+        "Surveillance Cameras"
+      ],
+      [
+        "Temperature Controlled Environment1"
+      ],
+      [
+        "Ticket Machines"
+      ],
+      [
+        "Timetables"
+      ],
+      [
+        "Bike Facilities",
+        "*",
+        "*"
+      ],
+      [
+        "Car Access Facilities",
+        "*",
+        "*"
+      ],
+      [
+        "Elevator",
+        "*",
+        "*"
+      ],
+      [
+        "Escalators",
+        "*",
+        "*"
+      ],
+      [
+        "On-Site Ticket Office",
+        "*",
+        "*"
+      ],
+      [
+        "Taxi Pickup/Dropoff",
+        "*",
+        "*"
+      ],
+      [
+        "Waiting Room1",
+        "*",
+        "*"
+      ],
+      [
+        "1)  Note that seating availability and weather protection refer to seats, canopies, or wind shelters on the platforms themselves, whereas temperature-controlled environment refers to an indoor facility with heating and air conditioning availability. A waiting room refers to a designated indoor environment with seating availability, separate from platform seating, which may or may not be temperature controlled."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-11: Transit Vehicle Amenity Values"
+      ],
+      [
+        "Attribute Type",
+        "Recommended Value per User Trip (2024 $)"
+      ],
+      [
+        "Bus",
+        "Light Rail /Streetcar",
+        "Rail"
+      ],
+      [
+        "Electronic Real-Time Information Displays"
+      ],
+      [
+        "Handrails"
+      ],
+      [
+        "Luggage Storage"
+      ],
+      [
+        "PA System"
+      ],
+      [
+        "Surveillance Cameras"
+      ],
+      [
+        "Temperature Control"
+      ],
+      [
+        "Wheelchair Space"
+      ],
+      [
+        "Food Service Availability",
+        "*",
+        "*"
+      ],
+      [
+        "Restroom Availability",
+        "*",
+        "*"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-12: Transit Mode Ride and Boarding Quality Revealed Preference Values"
+      ],
+      [
+        "Transit Mode",
+        "Boarding Quality Benefit (Per Boarding) (2024 $)1",
+        "Vehicle Ride Quality Benefit (Per Passenger Hour) (2024 $)1"
+      ],
+      [
+        "Low-Intensive BRT2"
+      ],
+      [
+        "Medium-Intensive BRT2"
+      ],
+      [
+        "High-Intensive BRT2,3"
+      ],
+      [
+        "Streetcar or On-Street Light Rail Transit"
+      ],
+      [
+        "Off-Street Light Rail Transit"
+      ],
+      [
+        "Heavy Rail"
+      ],
+      [
+        "Commuter Rail"
+      ],
+      [
+        "Ferry3"
+      ],
+      [
+        "1) Values applicable when base case is transit use of standard on-street bus, the reference case used to create these values. When comparing other types of modal shift, the differences between the relevant modal values above should be used."
+      ],
+      [
+        "2) Low-intensive BRT would include special service branding, low floor vehicles, at least 50 percent of route in dedicated lanes and potentially shared turns and the remainder in mixed-traffic, some signal priority, level boarding, off-board fare collection, and visually distinct stations. Medium-intensive BRT would include features of Low-intensive BRT but have 100 percent of the route in dedicated lanes, traffic signal priority throughout the corridor, and median-running service or right-turn prohibitions. High-intensive BRT would have a completely sealed right-of-way with no traffic interference and traffic signal preemption, akin to a “rubber-tired railroad.”"
+      ],
+      [
+        "3) The Capital Investment Grant program has to date not completed a before-and-after study of ridership on a ferry project or a high-intensive BRT as described above, and thus does not have a calibrated estimate for the fixedguideway setting for those modes. Thus, these values represent the current best estimates, considering average station and ride quality relative to other transit modes."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-13: Mortality Reduction Benefits of Induced Active Transportation Values"
+      ],
+      [
+        "Mode",
+        "Applicable Age Range3",
+        "Recommended Value per Induced Trip (2024 $)4"
+      ],
+      [
+        "Walking1",
+        "Ages 20-74"
+      ],
+      [
+        "Cycling2",
+        "Ages 20-64"
+      ],
+      [
+        "1)   Based on an assumed average walking speed of 3.2 miles per hour, an assumed average age of the relevant age range (20-74 years) of 45, a corresponding baseline mortality risk of 267.1 per 100,000, an annual risk reduction of 8.6 percent per daily mile walked, and an average walking trip distance of 0.86 miles."
+      ],
+      [
+        "2)   Based on an assumed average cycling speed of 9.8 miles per hour, an assumed average age of the relevant age range (20-64 years) of 42, a corresponding baseline mortality risk of 217.9 per 100,000, an annual risk reduction of 4.3 percent per daily mile cycled, and an average cycling trip distance of 2.38 miles."
+      ],
+      [
+        "3)   Absent more localized data on the proportion of the expected users falling into the age ranges above, applicants may apply a general assumption of 68% and 59% of overall induced trips falling into the walking and cycling age ranges, respectively, assuming a distribution matching the national average."
+      ],
+      [
+        "4)   Applicants should ensure these monetization values are only applied to trips induced from non-active transportation modes within the relevant age ranges for each mode. Absent more localized data on the proportion of induced trips coming from non-active transportation modes, applicants may apply a general assumption of 89% of induced trips falling into that category, assuming a distribution matching the national average travel pattern."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table A-14: External Highway Use Costs"
+      ],
+      [
+        "Vehicle Type and Location",
+        "Recommended Value of Cost per Vehicle Mile Traveled (2024 $)1"
+      ],
+      [
+        "Congestion",
+        "Noise",
+        "Safety Cost",
+        "Emission Cost2"
+      ],
+      [
+        "Light-Duty Vehicles - Urban",
+        "*"
+      ],
+      [
+        "Light-Duty Vehicles - Rural",
+        "*"
+      ],
+      [
+        "Light-Duty Vehicles – All Locations"
+      ],
+      [
+        "Buses and Trucks - Urban",
+        "*"
+      ],
+      [
+        "Buses and Trucks - Rural",
+        "*"
+      ],
+      [
+        "Buses and Trucks – All Locations"
+      ],
+      [
+        "All Vehicles - Urban",
+        "*"
+      ],
+      [
+        "All Vehicles - Rural",
+        "*"
+      ],
+      [
+        "All Vehicles – All Locations"
+      ],
+      [
+        "1)   Congestion costs updated from the 1997 Highway Cost Allocation Study to reflect increased traffic volumes, changes in vehicle occupancy, and increases in the value of time per person-hour since that time. Both congestion and noise costs are also adjusted from 1994 dollars to 2024 dollars using the GDP deflator."
+      ],
+      [
+        "2)   Emission rates are based on estimates from EPA’s MOVES Model. The monetization applies the 2035-year emission value to approximate increasing emission damage costs over time."
+      ]
+    ],
+    "User Volumes": [
+      [
+        "User Volumes"
+      ],
+      [
+        "This is an optional sheet to aid in displaying user volumes, note that it does not automatically link to any other sheet and is provided for convenience and organizational purposes."
+      ],
+      [
+        "Users can use whichever units are of interest to their application (for example: number of users, average annual daily traffic, person miles traveled, vehicle miles traveled)."
+      ],
+      [
+        "Users are free to use only the necessary columns for their application and/or to add additional columns as necessary."
+      ],
+      [
+        "If you do not wish to use this sheet, simply leave the values blank and move on to the next sheet."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Volumes by Mode"
+      ],
+      [
+        "Vehicles",
+        "Trucks",
+        "Pedestrians",
+        "Cyclists",
+        "Trains",
+        "[Other Modes]",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "Year",
+        "No Build",
+        "Build",
+        "No Build",
+        "Build",
+        "No Build",
+        "Build",
+        "No Build",
+        "Build",
+        "No Build",
+        "Build",
+        "No Build",
+        "Build"
+      ]
+    ],
+    "Capital Costs": [
+      [
+        "Capital Costs"
+      ],
+      [
+        "In this \"Capital Costs\" sheet,  values should be entered as year-of-expenditure dollars. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Annual Inflation Rate Used to Convert Constant Dollars to Year-of-Expenditure Dollars"
+      ],
+      [
+        "Previously Incurred Costs (in 2024$)"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Capital Costs"
+      ],
+      [
+        "Year",
+        "Capital Cost in Year-of-Expenditure Dollars",
+        "Cost in Constant Dollars (2024 $)",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "=B9/(1+$A$4)^(A9-Overview!$B$22)"
+      ],
+      [
+        "=IFERROR(B10/(1+$A$4)^(A10-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A10<$A$9+'Project Information'!$B$8-1,A10+1,\"\")",
+        "=IFERROR(B11/(1+$A$4)^(A11-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A11<$A$9+'Project Information'!$B$8-1,A11+1,\"\")",
+        "=IFERROR(B12/(1+$A$4)^(A12-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A12<$A$9+'Project Information'!$B$8-1,A12+1,\"\")",
+        "=IFERROR(B13/(1+$A$4)^(A13-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A13<$A$9+'Project Information'!$B$8-1,A13+1,\"\")",
+        "=IFERROR(B14/(1+$A$4)^(A14-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A14<$A$9+'Project Information'!$B$8-1,A14+1,\"\")",
+        "=IFERROR(B15/(1+$A$4)^(A15-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A15<$A$9+'Project Information'!$B$8-1,A15+1,\"\")",
+        "=IFERROR(B16/(1+$A$4)^(A16-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A16<$A$9+'Project Information'!$B$8-1,A16+1,\"\")",
+        "=IFERROR(B17/(1+$A$4)^(A17-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A17<$A$9+'Project Information'!$B$8-1,A17+1,\"\")",
+        "=IFERROR(B18/(1+$A$4)^(A18-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A18<$A$9+'Project Information'!$B$8-1,A18+1,\"\")",
+        "=IFERROR(B19/(1+$A$4)^(A19-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A19<$A$9+'Project Information'!$B$8-1,A19+1,\"\")",
+        "=IFERROR(B20/(1+$A$4)^(A20-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A20<$A$9+'Project Information'!$B$8-1,A20+1,\"\")",
+        "=IFERROR(B21/(1+$A$4)^(A21-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A21<$A$9+'Project Information'!$B$8-1,A21+1,\"\")",
+        "=IFERROR(B22/(1+$A$4)^(A22-Overview!$B$22),0)"
+      ],
+      [
+        "=IF(A22<$A$9+'Project Information'!$B$8-1,A22+1,\"\")",
+        "=IFERROR(B23/(1+$A$4)^(A23-Overview!$B$22),0)"
+      ]
+    ],
+    "Operations and Maintenance": [
+      [
+        "Operations and Maintenance Costs"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Applicants should use this sheet for general operations and maintenance, as well as any recapitalization costs that will be needed for project components over the course of the analysis period."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Operations and Maintenance"
+      ],
+      [
+        "Year",
+        "No Build Operations and Maintenance Costs",
+        "Build Operations and Maintenance Costs",
+        "Net Change in Operations and Maintenance Costs",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "=C8-B8"
+      ],
+      [
+        "=C9-B9"
+      ],
+      [
+        "=C10-B10"
+      ],
+      [
+        "=C11-B11"
+      ],
+      [
+        "=C12-B12"
+      ],
+      [
+        "=C13-B13"
+      ],
+      [
+        "=C14-B14"
+      ],
+      [
+        "=C15-B15"
+      ],
+      [
+        "=C16-B16"
+      ],
+      [
+        "=C17-B17"
+      ],
+      [
+        "=C18-B18"
+      ],
+      [
+        "=C19-B19"
+      ],
+      [
+        "=C20-B20"
+      ],
+      [
+        "=C21-B21"
+      ],
+      [
+        "=C22-B22"
+      ],
+      [
+        "=C23-B23"
+      ],
+      [
+        "=C24-B24"
+      ],
+      [
+        "=C25-B25"
+      ],
+      [
+        "=C26-B26"
+      ],
+      [
+        "=C27-B27"
+      ],
+      [
+        "=C28-B28"
+      ],
+      [
+        "=C29-B29"
+      ],
+      [
+        "=C30-B30"
+      ],
+      [
+        "=C31-B31"
+      ],
+      [
+        "=C32-B32"
+      ],
+      [
+        "=C33-B33"
+      ],
+      [
+        "=C34-B34"
+      ],
+      [
+        "=C35-B35"
+      ],
+      [
+        "=C36-B36"
+      ],
+      [
+        "=C37-B37"
+      ]
+    ],
+    "Safety": [
+      [
+        "Safety"
+      ],
+      [
+        "Note that not all projects will have benefits in all categories. In such cases, simply leave the input values in that sheet as zeros and move to the next sheet."
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Recommended Monetization Values"
+      ],
+      [
+        "KABCO Level",
+        "='Parameter Values'!B6"
+      ],
+      [
+        "O - No Injury",
+        "='Parameter Values'!B7"
+      ],
+      [
+        "C - Possible Injury",
+        "='Parameter Values'!B8"
+      ],
+      [
+        "B - Non-incapacitating",
+        "='Parameter Values'!B9"
+      ],
+      [
+        "A - Incapacitating",
+        "='Parameter Values'!B10"
+      ],
+      [
+        "K - Killed",
+        "='Parameter Values'!B11"
+      ],
+      [
+        "U - Injured (Severity Unknown)",
+        "='Parameter Values'!B12"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Crash Type"
+      ],
+      [
+        "PDO Crash",
+        "='Parameter Values'!B15"
+      ],
+      [
+        "Injury Crash",
+        "='Parameter Values'!B16"
+      ],
+      [
+        "Fatal Crash",
+        "='Parameter Values'!B17"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 2. Safety"
+      ],
+      [
+        "Year",
+        "No Build Safety Costs",
+        "Build Safety Costs",
+        "Safety Benefits",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "=B22-C22"
+      ],
+      [
+        "=B23-C23"
+      ],
+      [
+        "=B24-C24"
+      ],
+      [
+        "=B25-C25"
+      ],
+      [
+        "=B26-C26"
+      ],
+      [
+        "=B27-C27"
+      ],
+      [
+        "=B28-C28"
+      ],
+      [
+        "=B29-C29"
+      ],
+      [
+        "=B30-C30"
+      ],
+      [
+        "=B31-C31"
+      ],
+      [
+        "=B32-C32"
+      ],
+      [
+        "=B33-C33"
+      ],
+      [
+        "=B34-C34"
+      ],
+      [
+        "=B35-C35"
+      ],
+      [
+        "=B36-C36"
+      ],
+      [
+        "=B37-C37"
+      ],
+      [
+        "=B38-C38"
+      ],
+      [
+        "=B39-C39"
+      ],
+      [
+        "=B40-C40"
+      ],
+      [
+        "=B41-C41"
+      ],
+      [
+        "=B42-C42"
+      ],
+      [
+        "=B43-C43"
+      ],
+      [
+        "=B44-C44"
+      ],
+      [
+        "=B45-C45"
+      ],
+      [
+        "=B46-C46"
+      ],
+      [
+        "=B47-C47"
+      ],
+      [
+        "=B48-C48"
+      ],
+      [
+        "=B49-C49"
+      ],
+      [
+        "=B50-C50"
+      ],
+      [
+        "=B51-C51"
+      ]
+    ],
+    "Travel Time Savings": [
+      [
+        "Travel Time Savings"
+      ],
+      [
+        "Note that not all projects will have benefits in all categories. In such cases, simply leave the input values in that sheet as zeros and move to the next sheet."
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Recommended Monetization Values"
+      ],
+      [
+        "Category",
+        "Hourly Value (2024 $)"
+      ],
+      [
+        "Personal",
+        "='Parameter Values'!B24"
+      ],
+      [
+        "Business",
+        "='Parameter Values'!B25"
+      ],
+      [
+        "All Purpose",
+        "='Parameter Values'!B26"
+      ],
+      [
+        "Walking, Cycling, Waiting, Standing, and Transfer Time",
+        "='Parameter Values'!B28"
+      ],
+      [
+        "Commercial Vehicle Operators"
+      ],
+      [
+        "Truck Drivers",
+        "='Parameter Values'!B31"
+      ],
+      [
+        "Bus Drivers",
+        "='Parameter Values'!B32"
+      ],
+      [
+        "Transit Rail Operators",
+        "='Parameter Values'!B33"
+      ],
+      [
+        "Locomotive Engineers",
+        "='Parameter Values'!B34"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 2. Travel Time Savings"
+      ],
+      [
+        "Year",
+        "No Build Travel Time Costs",
+        "Build Travel Time Costs",
+        "Travel Time Benefits",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "=B20-C20"
+      ],
+      [
+        "=B21-C21"
+      ],
+      [
+        "=B22-C22"
+      ],
+      [
+        "=B23-C23"
+      ],
+      [
+        "=B24-C24"
+      ],
+      [
+        "=B25-C25"
+      ],
+      [
+        "=B26-C26"
+      ],
+      [
+        "=B27-C27"
+      ],
+      [
+        "=B28-C28"
+      ],
+      [
+        "=B29-C29"
+      ],
+      [
+        "=B30-C30"
+      ],
+      [
+        "=B31-C31"
+      ],
+      [
+        "=B32-C32"
+      ],
+      [
+        "=B33-C33"
+      ],
+      [
+        "=B34-C34"
+      ],
+      [
+        "=B35-C35"
+      ],
+      [
+        "=B36-C36"
+      ],
+      [
+        "=B37-C37"
+      ],
+      [
+        "=B38-C38"
+      ],
+      [
+        "=B39-C39"
+      ],
+      [
+        "=B40-C40"
+      ],
+      [
+        "=B41-C41"
+      ],
+      [
+        "=B42-C42"
+      ],
+      [
+        "=B43-C43"
+      ],
+      [
+        "=B44-C44"
+      ],
+      [
+        "=B45-C45"
+      ],
+      [
+        "=B46-C46"
+      ],
+      [
+        "=B47-C47"
+      ],
+      [
+        "=B48-C48"
+      ],
+      [
+        "=B49-C49"
+      ]
+    ],
+    "Vehicle Operating Cost Savings": [
+      [
+        "Vehicle Operating Costs"
+      ],
+      [
+        "Note that not all projects will have benefits in all categories. In such cases, simply leave the input values in that sheet as zeros and move to the next sheet."
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Recommended Monetization Values"
+      ],
+      [
+        "Vehicle Type",
+        "Recommended Value per Mile (2024 $)"
+      ],
+      [
+        "Light Duty Vehicles",
+        "='Parameter Values'!B53"
+      ],
+      [
+        "Commercial Trucks",
+        "='Parameter Values'!B54"
+      ],
+      [
+        "Train and Movement Type",
+        "Recommended Value per Hour (2024 $)"
+      ],
+      [
+        "Idling",
+        "Operating Costs"
+      ],
+      [
+        "Freight Train",
+        "='Parameter Values'!B63"
+      ],
+      [
+        "Commuter Train",
+        "='Parameter Values'!B64"
+      ],
+      [
+        "Amtrak Long-Distance",
+        "='Parameter Values'!B65"
+      ],
+      [
+        "Amtrak State-Supported",
+        "='Parameter Values'!B66"
+      ],
+      [
+        "Hauling",
+        "Operating Costs"
+      ],
+      [
+        "Freight Train",
+        "='Parameter Values'!B68"
+      ],
+      [
+        "Commuter Train",
+        "='Parameter Values'!B69"
+      ],
+      [
+        "Amtrak Long-Distance",
+        "='Parameter Values'!B70"
+      ],
+      [
+        "Amtrak State-Supported",
+        "='Parameter Values'!B71"
+      ],
+      [
+        "All Movements",
+        "Operating Costs"
+      ],
+      [
+        "Freight Railcar",
+        "='Parameter Values'!B73"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 2. Vehicle Operating Costs"
+      ],
+      [
+        "Year",
+        "No Build Vehicle Operating Costs",
+        "Build Vehicle Operating Costs",
+        "Vehicle Operating Cost Savings",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "=B26-C26"
+      ],
+      [
+        "=B27-C27"
+      ],
+      [
+        "=B28-C28"
+      ],
+      [
+        "=B29-C29"
+      ],
+      [
+        "=B30-C30"
+      ],
+      [
+        "=B31-C31"
+      ],
+      [
+        "=B32-C32"
+      ],
+      [
+        "=B33-C33"
+      ],
+      [
+        "=B34-C34"
+      ],
+      [
+        "=B35-C35"
+      ],
+      [
+        "=B36-C36"
+      ],
+      [
+        "=B37-C37"
+      ],
+      [
+        "=B38-C38"
+      ],
+      [
+        "=B39-C39"
+      ],
+      [
+        "=B40-C40"
+      ],
+      [
+        "=B41-C41"
+      ],
+      [
+        "=B42-C42"
+      ],
+      [
+        "=B43-C43"
+      ],
+      [
+        "=B44-C44"
+      ],
+      [
+        "=B45-C45"
+      ],
+      [
+        "=B46-C46"
+      ],
+      [
+        "=B47-C47"
+      ],
+      [
+        "=B48-C48"
+      ],
+      [
+        "=B49-C49"
+      ],
+      [
+        "=B50-C50"
+      ],
+      [
+        "=B51-C51"
+      ],
+      [
+        "=B52-C52"
+      ],
+      [
+        "=B53-C53"
+      ],
+      [
+        "=B54-C54"
+      ],
+      [
+        "=B55-C55"
+      ]
+    ],
+    "Emissions Reduction": [
+      [
+        "Emissions Reduction"
+      ],
+      [
+        "Unique to this sheet, applicants may either input monetized emissions in 2024 dollars OR enter the direct emission amounts in the table below, in which case they must be entered in the form of METRIC TONS. A metric ton is equal to 1.1023 short tons."
+      ],
+      [
+        "To avoid double-counting of benefits, applicants should not enter the same emission data as BOTH a dollar value and as units of emissions."
+      ],
+      [
+        "Unique to this sheet, the template will automatically apply the correct monetization values for units of emissions."
+      ],
+      [
+        "Whether amounts are entered in dollar form OR direct units of emissions, the template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Emission Costs per VMT and Train-Hour"
+      ],
+      [
+        "Vehicle Type and Location",
+        "Recommended Value per Mile (2024 $)"
+      ],
+      [
+        "Emissions"
+      ],
+      [
+        "Light-Duty Vehicles - Urban",
+        "*"
+      ],
+      [
+        "Light-Duty Vehicles - Rural",
+        "*"
+      ],
+      [
+        "Light-Duty Vehicles – All Locations",
+        "='Parameter Values'!E233"
+      ],
+      [
+        "Buses and Trucks - Urban",
+        "*"
+      ],
+      [
+        "Buses and Trucks - Rural",
+        "*"
+      ],
+      [
+        "Buses and Trucks – All Locations",
+        "='Parameter Values'!E236"
+      ],
+      [
+        "All Vehicles - Urban",
+        "*"
+      ],
+      [
+        "All Vehicles - Rural",
+        "*"
+      ],
+      [
+        "All Vehicles – All Locations",
+        "='Parameter Values'!E239"
+      ],
+      [
+        "Train and Movement Type",
+        "Recommended Value per Hour (2024 $)"
+      ],
+      [
+        "Idling",
+        "Emissions"
+      ],
+      [
+        "Freight Train",
+        "='Parameter Values'!C63"
+      ],
+      [
+        "Commuter Train",
+        "='Parameter Values'!C64"
+      ],
+      [
+        "Amtrak Long-Distance",
+        "='Parameter Values'!C65"
+      ],
+      [
+        "Amtrak State-Supported",
+        "='Parameter Values'!C66"
+      ],
+      [
+        "Hauling",
+        "Emissions"
+      ],
+      [
+        "Freight Train",
+        "='Parameter Values'!C68"
+      ],
+      [
+        "Commuter Train",
+        "='Parameter Values'!C69"
+      ],
+      [
+        "Amtrak Long-Distance",
+        "='Parameter Values'!C70"
+      ],
+      [
+        "Amtrak State-Supported",
+        "='Parameter Values'!C71"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 2. Emissions"
+      ],
+      [
+        "Year",
+        "No Build Emission Costs ($)",
+        "Build Emission Costs ($)",
+        "No Build NOx (mt)",
+        "Build NOx (mt)",
+        "No Build SOx (mt)",
+        "Build SOx (mt)",
+        "No Build PM2.5 (mt)",
+        "Build PM2.5 (mt)",
+        "NOx",
+        "SOx",
+        "PM2.5",
+        "Emission Reduction",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A33,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A33,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A33,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A34,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A34,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A34,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A35,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A35,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A35,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A36,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A36,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A36,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A37,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A37,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A37,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A38,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A38,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A38,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A39,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A39,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A39,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A40,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A40,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A40,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A41,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A41,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A41,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A42,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A42,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A42,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A43,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A43,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A43,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A44,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A44,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A44,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A45,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A45,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A45,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A46,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A46,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A46,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A47,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A47,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A47,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A48,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A48,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A48,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A49,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A49,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A49,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A50,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A50,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A50,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A51,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A51,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A51,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A52,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A52,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A52,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A53,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A53,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A53,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A54,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A54,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A54,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A55,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A55,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A55,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A56,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A56,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A56,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A57,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A57,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A57,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A58,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A58,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A58,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A59,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A59,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A59,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A60,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A60,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A60,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A61,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A61,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A61,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ],
+      [
+        "=IFERROR(VLOOKUP($A62,'Parameter Values'!$A$78:$E$107,2,FALSE),'Parameter Values'!B$107)",
+        "=IFERROR(VLOOKUP($A62,'Parameter Values'!$A$78:$E$107,3,FALSE),'Parameter Values'!C$107)",
+        "=IFERROR(VLOOKUP($A62,'Parameter Values'!$A$78:$E$107,4,FALSE),'Parameter Values'!D$107)"
+      ]
+    ],
+    "Other Highway Use Externalities": [
+      [
+        "Other Highway Use Externalities"
+      ],
+      [
+        "Note that not all projects will have benefits in all categories. In such cases, simply leave the input values in that sheet as zeros and move to the next sheet."
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Recommended Monetization Values"
+      ],
+      [
+        "Vehicle Type and Location",
+        "Congestion Cost per VMT",
+        "Noise Cost per VMT",
+        "Safety Cost per VMT"
+      ],
+      [
+        "='Parameter Values'!A231",
+        "='Parameter Values'!B231",
+        "='Parameter Values'!C231",
+        "='Parameter Values'!D231"
+      ],
+      [
+        "='Parameter Values'!A232",
+        "='Parameter Values'!B232",
+        "='Parameter Values'!C232",
+        "='Parameter Values'!D232"
+      ],
+      [
+        "='Parameter Values'!A233",
+        "='Parameter Values'!B233",
+        "='Parameter Values'!C233",
+        "='Parameter Values'!D233"
+      ],
+      [
+        "='Parameter Values'!A234",
+        "='Parameter Values'!B234",
+        "='Parameter Values'!C234",
+        "='Parameter Values'!D234"
+      ],
+      [
+        "='Parameter Values'!A235",
+        "='Parameter Values'!B235",
+        "='Parameter Values'!C235",
+        "='Parameter Values'!D235"
+      ],
+      [
+        "='Parameter Values'!A236",
+        "='Parameter Values'!B236",
+        "='Parameter Values'!C236",
+        "='Parameter Values'!D236"
+      ],
+      [
+        "='Parameter Values'!A237",
+        "='Parameter Values'!B237",
+        "='Parameter Values'!C237",
+        "='Parameter Values'!D237"
+      ],
+      [
+        "='Parameter Values'!A238",
+        "='Parameter Values'!B238",
+        "='Parameter Values'!C238",
+        "='Parameter Values'!D238"
+      ],
+      [
+        "='Parameter Values'!A239",
+        "='Parameter Values'!B239",
+        "='Parameter Values'!C239",
+        "='Parameter Values'!D239"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 2. Avoided Externality Benefits"
+      ],
+      [
+        "Year",
+        "Avoided Externalities",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "='Project Information'!$B$9"
+      ],
+      [
+        "=IF(A20<'Project Information'!B$11,A20+1,\"\")"
+      ],
+      [
+        "=IF(A21<'Project Information'!B$11,A21+1,\"\")"
+      ],
+      [
+        "=IF(A22<'Project Information'!B$11,A22+1,\"\")"
+      ],
+      [
+        "=IF(A23<'Project Information'!B$11,A23+1,\"\")"
+      ],
+      [
+        "=IF(A24<'Project Information'!B$11,A24+1,\"\")"
+      ],
+      [
+        "=IF(A25<'Project Information'!B$11,A25+1,\"\")"
+      ],
+      [
+        "=IF(A26<'Project Information'!B$11,A26+1,\"\")"
+      ],
+      [
+        "=IF(A27<'Project Information'!B$11,A27+1,\"\")"
+      ],
+      [
+        "=IF(A28<'Project Information'!B$11,A28+1,\"\")"
+      ],
+      [
+        "=IF(A29<'Project Information'!B$11,A29+1,\"\")"
+      ],
+      [
+        "=IF(A30<'Project Information'!B$11,A30+1,\"\")"
+      ],
+      [
+        "=IF(A31<'Project Information'!B$11,A31+1,\"\")"
+      ],
+      [
+        "=IF(A32<'Project Information'!B$11,A32+1,\"\")"
+      ],
+      [
+        "=IF(A33<'Project Information'!B$11,A33+1,\"\")"
+      ],
+      [
+        "=IF(A34<'Project Information'!B$11,A34+1,\"\")"
+      ],
+      [
+        "=IF(A35<'Project Information'!B$11,A35+1,\"\")"
+      ],
+      [
+        "=IF(A36<'Project Information'!B$11,A36+1,\"\")"
+      ],
+      [
+        "=IF(A37<'Project Information'!B$11,A37+1,\"\")"
+      ],
+      [
+        "=IF(A38<'Project Information'!B$11,A38+1,\"\")"
+      ],
+      [
+        "=IF(A39<'Project Information'!B$11,A39+1,\"\")"
+      ],
+      [
+        "=IF(A40<'Project Information'!B$11,A40+1,\"\")"
+      ],
+      [
+        "=IF(A41<'Project Information'!B$11,A41+1,\"\")"
+      ],
+      [
+        "=IF(A42<'Project Information'!B$11,A42+1,\"\")"
+      ],
+      [
+        "=IF(A43<'Project Information'!B$11,A43+1,\"\")"
+      ],
+      [
+        "=IF(A44<'Project Information'!B$11,A44+1,\"\")"
+      ],
+      [
+        "=IF(A45<'Project Information'!B$11,A45+1,\"\")"
+      ],
+      [
+        "=IF(A46<'Project Information'!B$11,A46+1,\"\")"
+      ],
+      [
+        "=IF(A47<'Project Information'!B$11,A47+1,\"\")"
+      ],
+      [
+        "=IF(A48<'Project Information'!B$11,A48+1,\"\")"
+      ]
+    ],
+    "Amenity Benefits": [
+      [
+        "Amenity Benefits"
+      ],
+      [
+        "Note that not all projects will have benefits in all categories. In such cases, simply leave the input values in that sheet as zeros and move to the next sheet."
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "For recommended monetization values, please refer to the Parameter Values tab directly."
+      ],
+      [
+        "There are numerous potential values for pedestrian facilities, bicycle facilities, transit vehicles, and transit stations."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 2. Amenity Benefits"
+      ],
+      [
+        "Year",
+        "Amenity Benefits",
+        "Workspace - Applicants may create new sheets for more space"
+      ]
+    ],
+    "Health Benefits": [
+      [
+        "Health Benefits"
+      ],
+      [
+        "Note that not all projects will have benefits in all categories. In such cases, simply leave the input values in that sheet as zeros and move to the next sheet."
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Recommended Monetization Values"
+      ],
+      [
+        "Mode",
+        "Applicable Age Range",
+        "Recommended Value per Induced Trip (2024 $)"
+      ],
+      [
+        "Walking",
+        "='Parameter Values'!B220",
+        "='Parameter Values'!C220"
+      ],
+      [
+        "Cycling",
+        "='Parameter Values'!B221",
+        "='Parameter Values'!C221"
+      ],
+      [
+        "=RIGHT('Parameter Values'!A225,LEN('Parameter Values'!A225)-5)"
+      ],
+      [
+        "=RIGHT('Parameter Values'!A226,LEN('Parameter Values'!A226)-5)"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 2. Health Benefits"
+      ],
+      [
+        "Year",
+        "Health Benefits",
+        "Workspace - Applicants may create new sheets for more space"
+      ]
+    ],
+    "Residual Value": [
+      [
+        "Residual Value"
+      ],
+      [
+        "Note that not all projects will have benefits in all categories. In such cases, simply leave the input values in that sheet as zeros and move to the next sheet."
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "To calculate overall residual value for the entire project automatically, simply enter a useful life in the first row of Table 1 below."
+      ],
+      [
+        "If there are multiple distinct components with unique useful lives, use multiple rows as needed and override the formula and names in the input cells of Table 1 below."
+      ],
+      [
+        "For projects that involve capacity expansion or represent purely operational improvements, no residual value should be assumed."
+      ],
+      [
+        "Table 1. Useful Life"
+      ],
+      [
+        "Project Component",
+        "Capital Cost (2024 $)",
+        "Useful Life (Years)",
+        "Residual Value"
+      ],
+      [
+        "Overall Project if One Component",
+        "=SUM('Capital Costs'!C9:C23)+'Capital Costs'!A5",
+        "=IF(C11>'Project Information'!$B$10,IFERROR(B11*((C11-'Project Information'!$B$10)/C11),0),0)"
+      ],
+      [
+        "[Text Describing Project Component]",
+        "=IF(C12>'Project Information'!$B$10,IFERROR(B12*((C12-'Project Information'!$B$10)/C12),0),0)"
+      ],
+      [
+        "[Text Describing Project Component]",
+        "=IF(C13>'Project Information'!$B$10,IFERROR(B13*((C13-'Project Information'!$B$10)/C13),0),0)"
+      ],
+      [
+        "[Text Describing Project Component]",
+        "=IF(C14>'Project Information'!$B$10,IFERROR(B14*((C14-'Project Information'!$B$10)/C14),0),0)"
+      ],
+      [
+        "[Text Describing Project Component]",
+        "=IF(C15>'Project Information'!$B$10,IFERROR(B15*((C15-'Project Information'!$B$10)/C15),0),0)"
+      ],
+      [
+        "[Text Describing Project Component]",
+        "=IF(C16>'Project Information'!$B$10,IFERROR(B16*((C16-'Project Information'!$B$10)/C16),0),0)"
+      ],
+      [
+        "Total Residual Value",
+        "=SUM(D11:D16)"
+      ],
+      [
+        "-"
+      ],
+      [
+        "To manually calculate the residual value, please enter your estimated value in the blue italicized cell below in lieu of the automatic calculation"
+      ],
+      [
+        "To remove the residual value, please enter \"0\" in the blue cell below in lieu of the automatic calculation"
+      ],
+      [
+        "Table 2. Residual Value"
+      ],
+      [
+        "Year",
+        "Residual Value",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "='Project Information'!$B$9",
+        "=IF(A23='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A23<'Project Information'!B$11,A23+1,\"\")",
+        "=IF(A24='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A24<'Project Information'!B$11,A24+1,\"\")",
+        "=IF(A25='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A25<'Project Information'!B$11,A25+1,\"\")",
+        "=IF(A26='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A26<'Project Information'!B$11,A26+1,\"\")",
+        "=IF(A27='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A27<'Project Information'!B$11,A27+1,\"\")",
+        "=IF(A28='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A28<'Project Information'!B$11,A28+1,\"\")",
+        "=IF(A29='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A29<'Project Information'!B$11,A29+1,\"\")",
+        "=IF(A30='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A30<'Project Information'!B$11,A30+1,\"\")",
+        "=IF(A31='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A31<'Project Information'!B$11,A31+1,\"\")",
+        "=IF(A32='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A32<'Project Information'!B$11,A32+1,\"\")",
+        "=IF(A33='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A33<'Project Information'!B$11,A33+1,\"\")",
+        "=IF(A34='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A34<'Project Information'!B$11,A34+1,\"\")",
+        "=IF(A35='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A35<'Project Information'!B$11,A35+1,\"\")",
+        "=IF(A36='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A36<'Project Information'!B$11,A36+1,\"\")",
+        "=IF(A37='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A37<'Project Information'!B$11,A37+1,\"\")",
+        "=IF(A38='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A38<'Project Information'!B$11,A38+1,\"\")",
+        "=IF(A39='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A39<'Project Information'!B$11,A39+1,\"\")",
+        "=IF(A40='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A40<'Project Information'!B$11,A40+1,\"\")",
+        "=IF(A41='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A41<'Project Information'!B$11,A41+1,\"\")",
+        "=IF(A42='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A42<'Project Information'!B$11,A42+1,\"\")",
+        "=IF(A43='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A43<'Project Information'!B$11,A43+1,\"\")",
+        "=IF(A44='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A44<'Project Information'!B$11,A44+1,\"\")",
+        "=IF(A45='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A45<'Project Information'!B$11,A45+1,\"\")",
+        "=IF(A46='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A46<'Project Information'!B$11,A46+1,\"\")",
+        "=IF(A47='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A47<'Project Information'!B$11,A47+1,\"\")",
+        "=IF(A48='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A48<'Project Information'!B$11,A48+1,\"\")",
+        "=IF(A49='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A49<'Project Information'!B$11,A49+1,\"\")",
+        "=IF(A50='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A50<'Project Information'!B$11,A50+1,\"\")",
+        "=IF(A51='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ],
+      [
+        "=IF(A51<'Project Information'!B$11,A51+1,\"\")",
+        "=IF(A52='Project Information'!$B$6+'Project Information'!$B$8+'Project Information'!$B$10+('Project Information'!$B$7-'Project Information'!$B$6-1),$D$17,0)"
+      ]
+    ],
+    "Other Benefit 1": [
+      [
+        "Other Benefit 1"
+      ],
+      [
+        "This is an extra benefit sheet for an additional benefit category not captured elsewhere"
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Other Benefit"
+      ],
+      [
+        "Year",
+        "Other Benefit 1",
+        "Emissions Reduction (NOx/PM2.5)",
+        "Workspace - Applicants may create new sheets for more space"
+      ]
+    ],
+    "Other Benefit 2": [
+      [
+        "Other Benefit 2"
+      ],
+      [
+        "This is an extra benefit sheet for an additional benefit category not captured elsewhere"
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Other Benefit"
+      ],
+      [
+        "Year",
+        "Other Benefit 2",
+        "O&M Cost Savings (Avoided Bridge Deterioration)",
+        "Workspace - Applicants may create new sheets for more space"
+      ]
+    ],
+    "Other Benefit 3": [
+      [
+        "Other Benefit 3"
+      ],
+      [
+        "This is an extra benefit sheet for an additional benefit category not captured elsewhere"
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Other Benefit"
+      ],
+      [
+        "Year",
+        "Other Benefit 3",
+        "<- Benefit Name",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "='Project Information'!$B$9"
+      ],
+      [
+        "=IF(A8<'Project Information'!B$11,A8+1,\"\")"
+      ],
+      [
+        "=IF(A9<'Project Information'!B$11,A9+1,\"\")"
+      ],
+      [
+        "=IF(A10<'Project Information'!B$11,A10+1,\"\")"
+      ],
+      [
+        "=IF(A11<'Project Information'!B$11,A11+1,\"\")"
+      ],
+      [
+        "=IF(A12<'Project Information'!B$11,A12+1,\"\")"
+      ],
+      [
+        "=IF(A13<'Project Information'!B$11,A13+1,\"\")"
+      ],
+      [
+        "=IF(A14<'Project Information'!B$11,A14+1,\"\")"
+      ],
+      [
+        "=IF(A15<'Project Information'!B$11,A15+1,\"\")"
+      ],
+      [
+        "=IF(A16<'Project Information'!B$11,A16+1,\"\")"
+      ],
+      [
+        "=IF(A17<'Project Information'!B$11,A17+1,\"\")"
+      ],
+      [
+        "=IF(A18<'Project Information'!B$11,A18+1,\"\")"
+      ],
+      [
+        "=IF(A19<'Project Information'!B$11,A19+1,\"\")"
+      ],
+      [
+        "=IF(A20<'Project Information'!B$11,A20+1,\"\")"
+      ],
+      [
+        "=IF(A21<'Project Information'!B$11,A21+1,\"\")"
+      ],
+      [
+        "=IF(A22<'Project Information'!B$11,A22+1,\"\")"
+      ],
+      [
+        "=IF(A23<'Project Information'!B$11,A23+1,\"\")"
+      ],
+      [
+        "=IF(A24<'Project Information'!B$11,A24+1,\"\")"
+      ],
+      [
+        "=IF(A25<'Project Information'!B$11,A25+1,\"\")"
+      ],
+      [
+        "=IF(A26<'Project Information'!B$11,A26+1,\"\")"
+      ],
+      [
+        "=IF(A27<'Project Information'!B$11,A27+1,\"\")"
+      ],
+      [
+        "=IF(A28<'Project Information'!B$11,A28+1,\"\")"
+      ],
+      [
+        "=IF(A29<'Project Information'!B$11,A29+1,\"\")"
+      ],
+      [
+        "=IF(A30<'Project Information'!B$11,A30+1,\"\")"
+      ],
+      [
+        "=IF(A31<'Project Information'!B$11,A31+1,\"\")"
+      ],
+      [
+        "=IF(A32<'Project Information'!B$11,A32+1,\"\")"
+      ],
+      [
+        "=IF(A33<'Project Information'!B$11,A33+1,\"\")"
+      ],
+      [
+        "=IF(A34<'Project Information'!B$11,A34+1,\"\")"
+      ],
+      [
+        "=IF(A35<'Project Information'!B$11,A35+1,\"\")"
+      ],
+      [
+        "=IF(A36<'Project Information'!B$11,A36+1,\"\")"
+      ]
+    ],
+    "Other Benefit 4": [
+      [
+        "Other Benefit 4"
+      ],
+      [
+        "Note that if more than four \"other benefit\" categories are needed, applicants may create a copy of this sheet (and rename accordingly)."
+      ],
+      [
+        "Additionally, the \"Summary\" sheet will need to be edited to include additional columns for benefits."
+      ],
+      [
+        "Additionally, the formulas in the \"Total Benefits\" column may need to be adjusted to ensure all benefits are being summed correctly."
+      ],
+      [
+        "-"
+      ],
+      [
+        "This is an extra benefit sheet for an additional benefit category not captured elsewhere"
+      ],
+      [
+        "-"
+      ],
+      [
+        "All values entered into input cells in this sheet should be entered as undiscounted 2024 dollar values. The template will automatically apply discounting to all costs and benefits for you."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Other Benefit"
+      ],
+      [
+        "Year",
+        "Other Benefit 4",
+        "<- Benefit Name",
+        "Workspace - Applicants may create new sheets for more space"
+      ],
+      [
+        "='Project Information'!$B$9"
+      ],
+      [
+        "=IF(A12<'Project Information'!B$11,A12+1,\"\")"
+      ],
+      [
+        "=IF(A13<'Project Information'!B$11,A13+1,\"\")"
+      ],
+      [
+        "=IF(A14<'Project Information'!B$11,A14+1,\"\")"
+      ],
+      [
+        "=IF(A15<'Project Information'!B$11,A15+1,\"\")"
+      ],
+      [
+        "=IF(A16<'Project Information'!B$11,A16+1,\"\")"
+      ],
+      [
+        "=IF(A17<'Project Information'!B$11,A17+1,\"\")"
+      ],
+      [
+        "=IF(A18<'Project Information'!B$11,A18+1,\"\")"
+      ],
+      [
+        "=IF(A19<'Project Information'!B$11,A19+1,\"\")"
+      ],
+      [
+        "=IF(A20<'Project Information'!B$11,A20+1,\"\")"
+      ],
+      [
+        "=IF(A21<'Project Information'!B$11,A21+1,\"\")"
+      ],
+      [
+        "=IF(A22<'Project Information'!B$11,A22+1,\"\")"
+      ],
+      [
+        "=IF(A23<'Project Information'!B$11,A23+1,\"\")"
+      ],
+      [
+        "=IF(A24<'Project Information'!B$11,A24+1,\"\")"
+      ],
+      [
+        "=IF(A25<'Project Information'!B$11,A25+1,\"\")"
+      ],
+      [
+        "=IF(A26<'Project Information'!B$11,A26+1,\"\")"
+      ],
+      [
+        "=IF(A27<'Project Information'!B$11,A27+1,\"\")"
+      ],
+      [
+        "=IF(A28<'Project Information'!B$11,A28+1,\"\")"
+      ],
+      [
+        "=IF(A29<'Project Information'!B$11,A29+1,\"\")"
+      ],
+      [
+        "=IF(A30<'Project Information'!B$11,A30+1,\"\")"
+      ],
+      [
+        "=IF(A31<'Project Information'!B$11,A31+1,\"\")"
+      ],
+      [
+        "=IF(A32<'Project Information'!B$11,A32+1,\"\")"
+      ],
+      [
+        "=IF(A33<'Project Information'!B$11,A33+1,\"\")"
+      ],
+      [
+        "=IF(A34<'Project Information'!B$11,A34+1,\"\")"
+      ],
+      [
+        "=IF(A35<'Project Information'!B$11,A35+1,\"\")"
+      ],
+      [
+        "=IF(A36<'Project Information'!B$11,A36+1,\"\")"
+      ],
+      [
+        "=IF(A37<'Project Information'!B$11,A37+1,\"\")"
+      ],
+      [
+        "=IF(A38<'Project Information'!B$11,A38+1,\"\")"
+      ],
+      [
+        "=IF(A39<'Project Information'!B$11,A39+1,\"\")"
+      ],
+      [
+        "=IF(A40<'Project Information'!B$11,A40+1,\"\")"
+      ]
+    ],
+    "Summary": [
+      [
+        "Summary by Benefit Area"
+      ],
+      [
+        "Note that not all projects will have all benefit categories. Conversely, if more categories are needed, applicants may need to add additional columns, but be sure to edit the formula under \"Total Benefits\" to ensure all benefits are being correctly summed."
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. Summary of Benefits"
+      ],
+      [
+        "Year",
+        "Operations and Maintenance",
+        "Safety",
+        "Travel Time Savings",
+        "Vehicle Operating Cost Savings",
+        "Emission Reduction",
+        "Avoided Highway Externality",
+        "Amenity Benefits",
+        "Health Benefits",
+        "Residual Value",
+        "='Other Benefit 1'!B7",
+        "='Other Benefit 2'!B7",
+        "='Other Benefit 3'!B7",
+        "='Other Benefit 4'!B11",
+        "Total Benefits",
+        "Total Discounted Benefits"
+      ],
+      [
+        "='Project Information'!$B$9",
+        "='Operations and Maintenance'!D8",
+        "=Safety!D22",
+        "='Travel Time Savings'!D20",
+        "='Vehicle Operating Cost Savings'!D26",
+        "='Emissions Reduction'!S33",
+        "='Other Highway Use Externalities'!B20",
+        "='Amenity Benefits'!B11",
+        "='Health Benefits'!B15",
+        "='Residual Value'!B23",
+        "='Other Benefit 1'!B8",
+        "='Other Benefit 2'!B8",
+        "='Other Benefit 3'!B8",
+        "='Other Benefit 4'!B12",
+        "=SUM(C6:O6)-B6",
+        "=IFERROR(((P6)/(1.07)^(A6-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A6<'Project Information'!B$11,A6+1,\"\")",
+        "='Operations and Maintenance'!D9",
+        "=Safety!D23",
+        "='Travel Time Savings'!D21",
+        "='Vehicle Operating Cost Savings'!D27",
+        "='Emissions Reduction'!S34",
+        "='Other Highway Use Externalities'!B21",
+        "='Amenity Benefits'!B12",
+        "='Health Benefits'!B16",
+        "='Residual Value'!B24",
+        "='Other Benefit 1'!B9",
+        "='Other Benefit 2'!B9",
+        "='Other Benefit 3'!B9",
+        "='Other Benefit 4'!B13",
+        "=SUM(C7:O7)-B7",
+        "=IFERROR(((P7)/(1.07)^(A7-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A7<'Project Information'!B$11,A7+1,\"\")",
+        "='Operations and Maintenance'!D10",
+        "=Safety!D24",
+        "='Travel Time Savings'!D22",
+        "='Vehicle Operating Cost Savings'!D28",
+        "='Emissions Reduction'!S35",
+        "='Other Highway Use Externalities'!B22",
+        "='Amenity Benefits'!B13",
+        "='Health Benefits'!B17",
+        "='Residual Value'!B25",
+        "='Other Benefit 1'!B10",
+        "='Other Benefit 2'!B10",
+        "='Other Benefit 3'!B10",
+        "='Other Benefit 4'!B14",
+        "=SUM(C8:O8)-B8",
+        "=IFERROR(((P8)/(1.07)^(A8-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A8<'Project Information'!B$11,A8+1,\"\")",
+        "='Operations and Maintenance'!D11",
+        "=Safety!D25",
+        "='Travel Time Savings'!D23",
+        "='Vehicle Operating Cost Savings'!D29",
+        "='Emissions Reduction'!S36",
+        "='Other Highway Use Externalities'!B23",
+        "='Amenity Benefits'!B14",
+        "='Health Benefits'!B18",
+        "='Residual Value'!B26",
+        "='Other Benefit 1'!B11",
+        "='Other Benefit 2'!B11",
+        "='Other Benefit 3'!B11",
+        "='Other Benefit 4'!B15",
+        "=SUM(C9:O9)-B9",
+        "=IFERROR(((P9)/(1.07)^(A9-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A9<'Project Information'!B$11,A9+1,\"\")",
+        "='Operations and Maintenance'!D12",
+        "=Safety!D26",
+        "='Travel Time Savings'!D24",
+        "='Vehicle Operating Cost Savings'!D30",
+        "='Emissions Reduction'!S37",
+        "='Other Highway Use Externalities'!B24",
+        "='Amenity Benefits'!B15",
+        "='Health Benefits'!B19",
+        "='Residual Value'!B27",
+        "='Other Benefit 1'!B12",
+        "='Other Benefit 2'!B12",
+        "='Other Benefit 3'!B12",
+        "='Other Benefit 4'!B16",
+        "=SUM(C10:O10)-B10",
+        "=IFERROR(((P10)/(1.07)^(A10-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A10<'Project Information'!B$11,A10+1,\"\")",
+        "='Operations and Maintenance'!D13",
+        "=Safety!D27",
+        "='Travel Time Savings'!D25",
+        "='Vehicle Operating Cost Savings'!D31",
+        "='Emissions Reduction'!S38",
+        "='Other Highway Use Externalities'!B25",
+        "='Amenity Benefits'!B16",
+        "='Health Benefits'!B20",
+        "='Residual Value'!B28",
+        "='Other Benefit 1'!B13",
+        "='Other Benefit 2'!B13",
+        "='Other Benefit 3'!B13",
+        "='Other Benefit 4'!B17",
+        "=SUM(C11:O11)-B11",
+        "=IFERROR(((P11)/(1.07)^(A11-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A11<'Project Information'!B$11,A11+1,\"\")",
+        "='Operations and Maintenance'!D14",
+        "=Safety!D28",
+        "='Travel Time Savings'!D26",
+        "='Vehicle Operating Cost Savings'!D32",
+        "='Emissions Reduction'!S39",
+        "='Other Highway Use Externalities'!B26",
+        "='Amenity Benefits'!B17",
+        "='Health Benefits'!B21",
+        "='Residual Value'!B29",
+        "='Other Benefit 1'!B14",
+        "='Other Benefit 2'!B14",
+        "='Other Benefit 3'!B14",
+        "='Other Benefit 4'!B18",
+        "=SUM(C12:O12)-B12",
+        "=IFERROR(((P12)/(1.07)^(A12-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A12<'Project Information'!B$11,A12+1,\"\")",
+        "='Operations and Maintenance'!D15",
+        "=Safety!D29",
+        "='Travel Time Savings'!D27",
+        "='Vehicle Operating Cost Savings'!D33",
+        "='Emissions Reduction'!S40",
+        "='Other Highway Use Externalities'!B27",
+        "='Amenity Benefits'!B18",
+        "='Health Benefits'!B22",
+        "='Residual Value'!B30",
+        "='Other Benefit 1'!B15",
+        "='Other Benefit 2'!B15",
+        "='Other Benefit 3'!B15",
+        "='Other Benefit 4'!B19",
+        "=SUM(C13:O13)-B13",
+        "=IFERROR(((P13)/(1.07)^(A13-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A13<'Project Information'!B$11,A13+1,\"\")",
+        "='Operations and Maintenance'!D16",
+        "=Safety!D30",
+        "='Travel Time Savings'!D28",
+        "='Vehicle Operating Cost Savings'!D34",
+        "='Emissions Reduction'!S41",
+        "='Other Highway Use Externalities'!B28",
+        "='Amenity Benefits'!B19",
+        "='Health Benefits'!B23",
+        "='Residual Value'!B31",
+        "='Other Benefit 1'!B16",
+        "='Other Benefit 2'!B16",
+        "='Other Benefit 3'!B16",
+        "='Other Benefit 4'!B20",
+        "=SUM(C14:O14)-B14",
+        "=IFERROR(((P14)/(1.07)^(A14-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A14<'Project Information'!B$11,A14+1,\"\")",
+        "='Operations and Maintenance'!D17",
+        "=Safety!D31",
+        "='Travel Time Savings'!D29",
+        "='Vehicle Operating Cost Savings'!D35",
+        "='Emissions Reduction'!S42",
+        "='Other Highway Use Externalities'!B29",
+        "='Amenity Benefits'!B20",
+        "='Health Benefits'!B24",
+        "='Residual Value'!B32",
+        "='Other Benefit 1'!B17",
+        "='Other Benefit 2'!B17",
+        "='Other Benefit 3'!B17",
+        "='Other Benefit 4'!B21",
+        "=SUM(C15:O15)-B15",
+        "=IFERROR(((P15)/(1.07)^(A15-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A15<'Project Information'!B$11,A15+1,\"\")",
+        "='Operations and Maintenance'!D18",
+        "=Safety!D32",
+        "='Travel Time Savings'!D30",
+        "='Vehicle Operating Cost Savings'!D36",
+        "='Emissions Reduction'!S43",
+        "='Other Highway Use Externalities'!B30",
+        "='Amenity Benefits'!B21",
+        "='Health Benefits'!B25",
+        "='Residual Value'!B33",
+        "='Other Benefit 1'!B18",
+        "='Other Benefit 2'!B18",
+        "='Other Benefit 3'!B18",
+        "='Other Benefit 4'!B22",
+        "=SUM(C16:O16)-B16",
+        "=IFERROR(((P16)/(1.07)^(A16-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A16<'Project Information'!B$11,A16+1,\"\")",
+        "='Operations and Maintenance'!D19",
+        "=Safety!D33",
+        "='Travel Time Savings'!D31",
+        "='Vehicle Operating Cost Savings'!D37",
+        "='Emissions Reduction'!S44",
+        "='Other Highway Use Externalities'!B31",
+        "='Amenity Benefits'!B22",
+        "='Health Benefits'!B26",
+        "='Residual Value'!B34",
+        "='Other Benefit 1'!B19",
+        "='Other Benefit 2'!B19",
+        "='Other Benefit 3'!B19",
+        "='Other Benefit 4'!B23",
+        "=SUM(C17:O17)-B17",
+        "=IFERROR(((P17)/(1.07)^(A17-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A17<'Project Information'!B$11,A17+1,\"\")",
+        "='Operations and Maintenance'!D20",
+        "=Safety!D34",
+        "='Travel Time Savings'!D32",
+        "='Vehicle Operating Cost Savings'!D38",
+        "='Emissions Reduction'!S45",
+        "='Other Highway Use Externalities'!B32",
+        "='Amenity Benefits'!B23",
+        "='Health Benefits'!B27",
+        "='Residual Value'!B35",
+        "='Other Benefit 1'!B20",
+        "='Other Benefit 2'!B20",
+        "='Other Benefit 3'!B20",
+        "='Other Benefit 4'!B24",
+        "=SUM(C18:O18)-B18",
+        "=IFERROR(((P18)/(1.07)^(A18-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A18<'Project Information'!B$11,A18+1,\"\")",
+        "='Operations and Maintenance'!D21",
+        "=Safety!D35",
+        "='Travel Time Savings'!D33",
+        "='Vehicle Operating Cost Savings'!D39",
+        "='Emissions Reduction'!S46",
+        "='Other Highway Use Externalities'!B33",
+        "='Amenity Benefits'!B24",
+        "='Health Benefits'!B28",
+        "='Residual Value'!B36",
+        "='Other Benefit 1'!B21",
+        "='Other Benefit 2'!B21",
+        "='Other Benefit 3'!B21",
+        "='Other Benefit 4'!B25",
+        "=SUM(C19:O19)-B19",
+        "=IFERROR(((P19)/(1.07)^(A19-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A19<'Project Information'!B$11,A19+1,\"\")",
+        "='Operations and Maintenance'!D22",
+        "=Safety!D36",
+        "='Travel Time Savings'!D34",
+        "='Vehicle Operating Cost Savings'!D40",
+        "='Emissions Reduction'!S47",
+        "='Other Highway Use Externalities'!B34",
+        "='Amenity Benefits'!B25",
+        "='Health Benefits'!B29",
+        "='Residual Value'!B37",
+        "='Other Benefit 1'!B22",
+        "='Other Benefit 2'!B22",
+        "='Other Benefit 3'!B22",
+        "='Other Benefit 4'!B26",
+        "=SUM(C20:O20)-B20",
+        "=IFERROR(((P20)/(1.07)^(A20-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A20<'Project Information'!B$11,A20+1,\"\")",
+        "='Operations and Maintenance'!D23",
+        "=Safety!D37",
+        "='Travel Time Savings'!D35",
+        "='Vehicle Operating Cost Savings'!D41",
+        "='Emissions Reduction'!S48",
+        "='Other Highway Use Externalities'!B35",
+        "='Amenity Benefits'!B26",
+        "='Health Benefits'!B30",
+        "='Residual Value'!B38",
+        "='Other Benefit 1'!B23",
+        "='Other Benefit 2'!B23",
+        "='Other Benefit 3'!B23",
+        "='Other Benefit 4'!B27",
+        "=SUM(C21:O21)-B21",
+        "=IFERROR(((P21)/(1.07)^(A21-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A21<'Project Information'!B$11,A21+1,\"\")",
+        "='Operations and Maintenance'!D24",
+        "=Safety!D38",
+        "='Travel Time Savings'!D36",
+        "='Vehicle Operating Cost Savings'!D42",
+        "='Emissions Reduction'!S49",
+        "='Other Highway Use Externalities'!B36",
+        "='Amenity Benefits'!B27",
+        "='Health Benefits'!B31",
+        "='Residual Value'!B39",
+        "='Other Benefit 1'!B24",
+        "='Other Benefit 2'!B24",
+        "='Other Benefit 3'!B24",
+        "='Other Benefit 4'!B28",
+        "=SUM(C22:O22)-B22",
+        "=IFERROR(((P22)/(1.07)^(A22-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A22<'Project Information'!B$11,A22+1,\"\")",
+        "='Operations and Maintenance'!D25",
+        "=Safety!D39",
+        "='Travel Time Savings'!D37",
+        "='Vehicle Operating Cost Savings'!D43",
+        "='Emissions Reduction'!S50",
+        "='Other Highway Use Externalities'!B37",
+        "='Amenity Benefits'!B28",
+        "='Health Benefits'!B32",
+        "='Residual Value'!B40",
+        "='Other Benefit 1'!B25",
+        "='Other Benefit 2'!B25",
+        "='Other Benefit 3'!B25",
+        "='Other Benefit 4'!B29",
+        "=SUM(C23:O23)-B23",
+        "=IFERROR(((P23)/(1.07)^(A23-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A23<'Project Information'!B$11,A23+1,\"\")",
+        "='Operations and Maintenance'!D26",
+        "=Safety!D40",
+        "='Travel Time Savings'!D38",
+        "='Vehicle Operating Cost Savings'!D44",
+        "='Emissions Reduction'!S51",
+        "='Other Highway Use Externalities'!B38",
+        "='Amenity Benefits'!B29",
+        "='Health Benefits'!B33",
+        "='Residual Value'!B41",
+        "='Other Benefit 1'!B26",
+        "='Other Benefit 2'!B26",
+        "='Other Benefit 3'!B26",
+        "='Other Benefit 4'!B30",
+        "=SUM(C24:O24)-B24",
+        "=IFERROR(((P24)/(1.07)^(A24-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A24<'Project Information'!B$11,A24+1,\"\")",
+        "='Operations and Maintenance'!D27",
+        "=Safety!D41",
+        "='Travel Time Savings'!D39",
+        "='Vehicle Operating Cost Savings'!D45",
+        "='Emissions Reduction'!S52",
+        "='Other Highway Use Externalities'!B39",
+        "='Amenity Benefits'!B30",
+        "='Health Benefits'!B34",
+        "='Residual Value'!B42",
+        "='Other Benefit 1'!B27",
+        "='Other Benefit 2'!B27",
+        "='Other Benefit 3'!B27",
+        "='Other Benefit 4'!B31",
+        "=SUM(C25:O25)-B25",
+        "=IFERROR(((P25)/(1.07)^(A25-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A25<'Project Information'!B$11,A25+1,\"\")",
+        "='Operations and Maintenance'!D28",
+        "=Safety!D42",
+        "='Travel Time Savings'!D40",
+        "='Vehicle Operating Cost Savings'!D46",
+        "='Emissions Reduction'!S53",
+        "='Other Highway Use Externalities'!B40",
+        "='Amenity Benefits'!B31",
+        "='Health Benefits'!B35",
+        "='Residual Value'!B43",
+        "='Other Benefit 1'!B28",
+        "='Other Benefit 2'!B28",
+        "='Other Benefit 3'!B28",
+        "='Other Benefit 4'!B32",
+        "=SUM(C26:O26)-B26",
+        "=IFERROR(((P26)/(1.07)^(A26-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A26<'Project Information'!B$11,A26+1,\"\")",
+        "='Operations and Maintenance'!D29",
+        "=Safety!D43",
+        "='Travel Time Savings'!D41",
+        "='Vehicle Operating Cost Savings'!D47",
+        "='Emissions Reduction'!S54",
+        "='Other Highway Use Externalities'!B41",
+        "='Amenity Benefits'!B32",
+        "='Health Benefits'!B36",
+        "='Residual Value'!B44",
+        "='Other Benefit 1'!B29",
+        "='Other Benefit 2'!B29",
+        "='Other Benefit 3'!B29",
+        "='Other Benefit 4'!B33",
+        "=SUM(C27:O27)-B27",
+        "=IFERROR(((P27)/(1.07)^(A27-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A27<'Project Information'!B$11,A27+1,\"\")",
+        "='Operations and Maintenance'!D30",
+        "=Safety!D44",
+        "='Travel Time Savings'!D42",
+        "='Vehicle Operating Cost Savings'!D48",
+        "='Emissions Reduction'!S55",
+        "='Other Highway Use Externalities'!B42",
+        "='Amenity Benefits'!B33",
+        "='Health Benefits'!B37",
+        "='Residual Value'!B45",
+        "='Other Benefit 1'!B30",
+        "='Other Benefit 2'!B30",
+        "='Other Benefit 3'!B30",
+        "='Other Benefit 4'!B34",
+        "=SUM(C28:O28)-B28",
+        "=IFERROR(((P28)/(1.07)^(A28-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A28<'Project Information'!B$11,A28+1,\"\")",
+        "='Operations and Maintenance'!D31",
+        "=Safety!D45",
+        "='Travel Time Savings'!D43",
+        "='Vehicle Operating Cost Savings'!D49",
+        "='Emissions Reduction'!S56",
+        "='Other Highway Use Externalities'!B43",
+        "='Amenity Benefits'!B34",
+        "='Health Benefits'!B38",
+        "='Residual Value'!B46",
+        "='Other Benefit 1'!B31",
+        "='Other Benefit 2'!B31",
+        "='Other Benefit 3'!B31",
+        "='Other Benefit 4'!B35",
+        "=SUM(C29:O29)-B29",
+        "=IFERROR(((P29)/(1.07)^(A29-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A29<'Project Information'!B$11,A29+1,\"\")",
+        "='Operations and Maintenance'!D32",
+        "=Safety!D46",
+        "='Travel Time Savings'!D44",
+        "='Vehicle Operating Cost Savings'!D50",
+        "='Emissions Reduction'!S57",
+        "='Other Highway Use Externalities'!B44",
+        "='Amenity Benefits'!B35",
+        "='Health Benefits'!B39",
+        "='Residual Value'!B47",
+        "='Other Benefit 1'!B32",
+        "='Other Benefit 2'!B32",
+        "='Other Benefit 3'!B32",
+        "='Other Benefit 4'!B36",
+        "=SUM(C30:O30)-B30",
+        "=IFERROR(((P30)/(1.07)^(A30-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A30<'Project Information'!B$11,A30+1,\"\")",
+        "='Operations and Maintenance'!D33",
+        "=Safety!D47",
+        "='Travel Time Savings'!D45",
+        "='Vehicle Operating Cost Savings'!D51",
+        "='Emissions Reduction'!S58",
+        "='Other Highway Use Externalities'!B45",
+        "='Amenity Benefits'!B36",
+        "='Health Benefits'!B40",
+        "='Residual Value'!B48",
+        "='Other Benefit 1'!B33",
+        "='Other Benefit 2'!B33",
+        "='Other Benefit 3'!B33",
+        "='Other Benefit 4'!B37",
+        "=SUM(C31:O31)-B31",
+        "=IFERROR(((P31)/(1.07)^(A31-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A31<'Project Information'!B$11,A31+1,\"\")",
+        "='Operations and Maintenance'!D34",
+        "=Safety!D48",
+        "='Travel Time Savings'!D46",
+        "='Vehicle Operating Cost Savings'!D52",
+        "='Emissions Reduction'!S59",
+        "='Other Highway Use Externalities'!B46",
+        "='Amenity Benefits'!B37",
+        "='Health Benefits'!B41",
+        "='Residual Value'!B49",
+        "='Other Benefit 1'!B34",
+        "='Other Benefit 2'!B34",
+        "='Other Benefit 3'!B34",
+        "='Other Benefit 4'!B38",
+        "=SUM(C32:O32)-B32",
+        "=IFERROR(((P32)/(1.07)^(A32-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A32<'Project Information'!B$11,A32+1,\"\")",
+        "='Operations and Maintenance'!D35",
+        "=Safety!D49",
+        "='Travel Time Savings'!D47",
+        "='Vehicle Operating Cost Savings'!D53",
+        "='Emissions Reduction'!S60",
+        "='Other Highway Use Externalities'!B47",
+        "='Amenity Benefits'!B38",
+        "='Health Benefits'!B42",
+        "='Residual Value'!B50",
+        "='Other Benefit 1'!B35",
+        "='Other Benefit 2'!B35",
+        "='Other Benefit 3'!B35",
+        "='Other Benefit 4'!B39",
+        "=SUM(C33:O33)-B33",
+        "=IFERROR(((P33)/(1.07)^(A33-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A33<'Project Information'!B$11,A33+1,\"\")",
+        "='Operations and Maintenance'!D36",
+        "=Safety!D50",
+        "='Travel Time Savings'!D48",
+        "='Vehicle Operating Cost Savings'!D54",
+        "='Emissions Reduction'!S61",
+        "='Other Highway Use Externalities'!B48",
+        "='Amenity Benefits'!B39",
+        "='Health Benefits'!B43",
+        "='Residual Value'!B51",
+        "='Other Benefit 1'!B36",
+        "='Other Benefit 2'!B36",
+        "='Other Benefit 3'!B36",
+        "='Other Benefit 4'!B40",
+        "=SUM(C34:O34)-B34",
+        "=IFERROR(((P34)/(1.07)^(A34-Overview!$B$22)),0)"
+      ],
+      [
+        "=IF(A34<'Project Information'!B$11,A34+1,\"\")",
+        "='Operations and Maintenance'!D37",
+        "=Safety!D51",
+        "='Travel Time Savings'!D49",
+        "='Vehicle Operating Cost Savings'!D55",
+        "='Emissions Reduction'!S62",
+        "='Other Highway Use Externalities'!B49",
+        "='Amenity Benefits'!B40",
+        "='Health Benefits'!B44",
+        "='Residual Value'!B52",
+        "='Other Benefit 1'!B37",
+        "='Other Benefit 2'!B37",
+        "='Other Benefit 3'!B37",
+        "='Other Benefit 4'!B41",
+        "=SUM(C35:O35)-B35",
+        "=IFERROR(((P35)/(1.07)^(A35-Overview!$B$22)),0)"
+      ],
+      [
+        "Undiscounted Total",
+        "=SUM(B6:B35)",
+        "=SUM(C6:C35)",
+        "=SUM(D6:D35)",
+        "=SUM(E6:E35)",
+        "=SUM(F6:F35)",
+        "=SUM(H6:H35)",
+        "=SUM(I6:I35)",
+        "=SUM(J6:J35)",
+        "=SUM(K6:K35)",
+        "=SUM(L6:L35)",
+        "=SUM(M6:M35)",
+        "=SUM(N6:N35)",
+        "=SUM(O6:O35)",
+        "=SUM(P6:P35)"
+      ],
+      [
+        "Discounted Total",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10df3e7b0>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10ed9b750>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10ed9bed0>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10f382fd0>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10f383100>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10f132d50>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10e9a87c0>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10f15cf30>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10f0e7150>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10f38e950>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10e39c410>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x107c91a90>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10f3c4f30>",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x10f3c7770>",
+        "=SUM(Q6:Q35)"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 2. Summary of Costs"
+      ],
+      [
+        "Year",
+        "Capital Cost",
+        "Discounted Capital Cost"
+      ],
+      [
+        "='Capital Costs'!A9",
+        "='Capital Costs'!C9",
+        "=B41/(1.07)^(A41-Overview!$B$22)"
+      ],
+      [
+        "=A41+1",
+        "='Capital Costs'!C10",
+        "=B42/(1.07)^(A42-Overview!$B$22)"
+      ],
+      [
+        "=A42+1",
+        "='Capital Costs'!C11",
+        "=B43/(1.07)^(A43-Overview!$B$22)"
+      ],
+      [
+        "=A43+1",
+        "='Capital Costs'!C12",
+        "=B44/(1.07)^(A44-Overview!$B$22)"
+      ],
+      [
+        "=A44+1",
+        "='Capital Costs'!C13",
+        "=B45/(1.07)^(A45-Overview!$B$22)"
+      ],
+      [
+        "=A45+1",
+        "='Capital Costs'!C14",
+        "=B46/(1.07)^(A46-Overview!$B$22)"
+      ],
+      [
+        "=A46+1",
+        "='Capital Costs'!C15",
+        "=B47/(1.07)^(A47-Overview!$B$22)"
+      ],
+      [
+        "=A47+1",
+        "='Capital Costs'!C16",
+        "=B48/(1.07)^(A48-Overview!$B$22)"
+      ],
+      [
+        "=A48+1",
+        "='Capital Costs'!C17",
+        "=B49/(1.07)^(A49-Overview!$B$22)"
+      ],
+      [
+        "=A49+1",
+        "='Capital Costs'!C18",
+        "=B50/(1.07)^(A50-Overview!$B$22)"
+      ],
+      [
+        "=A50+1",
+        "='Capital Costs'!C19",
+        "=B51/(1.07)^(A51-Overview!$B$22)"
+      ],
+      [
+        "=A51+1",
+        "='Capital Costs'!C20",
+        "=B52/(1.07)^(A52-Overview!$B$22)"
+      ],
+      [
+        "=A52+1",
+        "='Capital Costs'!C21",
+        "=B53/(1.07)^(A53-Overview!$B$22)"
+      ],
+      [
+        "=A53+1",
+        "='Capital Costs'!C22",
+        "=B54/(1.07)^(A54-Overview!$B$22)"
+      ],
+      [
+        "=A54+1",
+        "='Capital Costs'!C23",
+        "=B55/(1.07)^(A55-Overview!$B$22)"
+      ],
+      [
+        "Total",
+        "=SUM(B41:B55)",
+        "=SUM(C41:C55)+'Capital Costs'!A5"
+      ]
+    ],
+    "Final Results": [
+      [
+        "Benefit Cost Analysis Results"
+      ],
+      [
+        "-"
+      ],
+      [
+        "Table 1. BCA Results"
+      ],
+      [
+        "Category",
+        "Value"
+      ],
+      [
+        "Total Discounted Benefits",
+        "=Summary!Q37"
+      ],
+      [
+        "Total Discounted Costs",
+        "=Summary!C56"
+      ],
+      [
+        "Net Present Value",
+        "=B5-B6"
+      ],
+      [
+        "Benefit Cost Ratio",
+        "=IFERROR(B5/B6, \"Enter Costs in 'Capital Cost' sheet\")",
+        "<-The BCR will be estimated once capital costs are entered in the 'Capital Cost' sheet"
+      ]
+    ]
+  }
+}
