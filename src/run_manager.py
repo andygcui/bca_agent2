@@ -9,7 +9,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
 
-from src.claude_client import ClaudeBCAClient, ClaudeRunState
+from src.claude_client import ClaudeBCAClient, ClaudeRunState, PHASE_NAMES
 from src.config import settings
 from src.claude_reviewer import ClaudeReviewer
 
@@ -121,7 +121,7 @@ class BCARunManager:
 
         try:
             for phase in range(1, 7):
-                self.record.append_log(f"Phase {phase}/6 — {self.claude.PHASE_NAMES[phase - 1]}")
+                self.record.append_log(f"Phase {phase}/6 — {PHASE_NAMES[phase - 1]}")
                 self._notify()
                 self.claude_state, response = self.claude.run_phase_step(
                     self.claude_state, phase
