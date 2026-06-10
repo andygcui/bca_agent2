@@ -1,9 +1,10 @@
-"""Anthropic Claude conversation thread — Files API + code execution."""
+"""Anthropic Claude 3-call BCA pipeline — Files API + code execution."""
 
 from __future__ import annotations
 
 import json
 import logging
+import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -20,9 +21,11 @@ from src.anthropic_files import (
     download_file,
     extract_output_file_ids,
     extract_text_from_message,
+    guess_mime,
     pick_workbook_file_id,
     save_upload_manifest,
     serialize_content_blocks,
+    upload_path,
     upload_project_files,
     upload_reference_files,
 )
@@ -42,6 +45,26 @@ PHASE_NAMES = [
     "Quality Review",
 ]
 
+CALL_NAMES = [
+    "Project Assessment & Spec",
+    "Build BCA Workbook",
+    "Write BCA Technical Memorandum",
+]
+
+
+def _extract_json_spec(text: str) -> str:
+    m = re.search(r"```json\s*([\s\S]*?)\s*```", text)
+    return m.group(1).strip() if m else ""
+
+
+def _extract_workbook_results(text: str) -> str:
+    m = re.search(
+        r"---\s*WORKBOOK RESULTS START\s*---\s*([\s\S]*?)\s*---\s*WORKBOOK RESULTS END\s*---",
+        text,
+        re.IGNORECASE,
+    )
+    return m.group(1).strip() if m else ""
+
 
 @dataclass
 class ClaudeRunState:
@@ -56,6 +79,10 @@ class ClaudeRunState:
     uploaded_files: list[dict[str, str]] = field(default_factory=list)
     input_file_ids: list[str] = field(default_factory=list)
     last_output_file_ids: list[str] = field(default_factory=list)
+    # 3-call pipeline state
+    project_spec: str = ""
+    workbook_results: str = ""
+    workbook_output_file_ids: list[str] = field(default_factory=list)
 
     def save(self) -> None:
         self.run_dir.mkdir(parents=True, exist_ok=True)
@@ -72,6 +99,9 @@ class ClaudeRunState:
                     "uploaded_files": self.uploaded_files,
                     "input_file_ids": self.input_file_ids,
                     "last_output_file_ids": self.last_output_file_ids,
+                    "project_spec": self.project_spec,
+                    "workbook_results": self.workbook_results,
+                    "workbook_output_file_ids": self.workbook_output_file_ids,
                     "messages": self.messages,
                 },
                 indent=2,
@@ -96,6 +126,9 @@ class ClaudeRunState:
             uploaded_files=data.get("uploaded_files", []),
             input_file_ids=data.get("input_file_ids", []),
             last_output_file_ids=data.get("last_output_file_ids", []),
+            project_spec=data.get("project_spec", ""),
+            workbook_results=data.get("workbook_results", ""),
+            workbook_output_file_ids=data.get("workbook_output_file_ids", []),
         )
 
 
@@ -113,8 +146,19 @@ class ClaudeBCAClient:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         return f"run_{ts}"
 
-    def _load_production_prompt(self) -> str:
-        return (settings.prompts_dir / "production_manual.md").read_text(encoding="utf-8")
+    def _get_uploaded_files(self, state: ClaudeRunState) -> list[UploadedFile]:
+        result = []
+        for f in state.uploaded_files:
+            name = f["name"]
+            uf = UploadedFile(
+                name=name,
+                path="",
+                file_id=f["file_id"],
+                mime_type=guess_mime(Path(name)),
+                role=f.get("role", ""),
+            )
+            result.append(uf)
+        return result
 
     def _upload_run_files(
         self,
@@ -127,33 +171,8 @@ class ClaudeBCAClient:
         save_upload_manifest(run_dir, all_uploaded)
         return all_uploaded
 
-    def _build_initial_user_content(
-        self,
-        uploaded: list[UploadedFile],
-        project_file_names: list[str],
-    ) -> list[dict[str, Any]]:
-        prompt = self._load_production_prompt()
-
-        blocks: list[dict[str, Any]] = [
-            {
-                "type": "text",
-                "text": (
-                    prompt
-                    + "\n\n---\n\n"
-                    "The USDOT reference files and project application files are attached below. "
-                    "Open and read them directly — do not rely on memory of prior text extracts.\n\n"
-                    f"Project files: {', '.join(project_file_names) if project_file_names else '(none)'}"
-                ),
-            }
-        ]
-        blocks.extend(build_file_attachment_blocks(uploaded))
-        return blocks
-
     def _api_messages(self, state: ClaudeRunState) -> list[dict[str, Any]]:
-        api_msgs: list[dict[str, Any]] = []
-        for msg in state.messages:
-            api_msgs.append({"role": msg["role"], "content": msg["content"]})
-        return api_msgs
+        return [{"role": m["role"], "content": m["content"]} for m in state.messages]
 
     _SYSTEM_PROMPT = (
         "You are a senior transportation economist and infrastructure finance consultant "
@@ -172,7 +191,7 @@ class ClaudeBCAClient:
         on_text_delta: Callable[[str], None] | None = None,
     ) -> tuple[str, list[dict[str, Any]], list[str]]:
         logger.info(
-            "Claude beta stream (model=%s, max_tokens=%s, files+code_execution)",
+            "Claude API call (model=%s, max_tokens=%s)",
             state.model,
             settings.claude_max_tokens,
         )
@@ -204,12 +223,34 @@ class ClaudeBCAClient:
         response_text = extract_text_from_message(final)
 
         logger.info(
-            "Claude stream complete (%s chars, %s output files, %s out tokens)",
+            "Call complete (%d chars, %d output files, %s out tokens)",
             chars,
             len(output_file_ids),
             final.usage.output_tokens if final.usage else "?",
         )
         return response_text, assistant_content, output_file_ids
+
+    def _fresh_call(
+        self,
+        state: ClaudeRunState,
+        content: list[dict[str, Any]],
+    ) -> tuple[str, list[dict[str, Any]], list[str]]:
+        """Make a single API call with a fresh (one-message) conversation."""
+        temp = ClaudeRunState(
+            run_id=state.run_id,
+            run_dir=state.run_dir,
+            model=state.model,
+            messages=[{"role": "user", "content": content}],
+            input_file_ids=state.input_file_ids,
+        )
+        response_text, assistant_content, output_file_ids = self._call_claude(temp)
+        state.input_tokens += temp.input_tokens
+        state.output_tokens += temp.output_tokens
+        return response_text, assistant_content, output_file_ids
+
+    # -------------------------------------------------------------------------
+    # Pipeline entry point
+    # -------------------------------------------------------------------------
 
     def start_production(
         self,
@@ -225,74 +266,119 @@ class ClaudeBCAClient:
             {"name": u.name, "file_id": u.file_id, "role": u.role} for u in uploaded
         ]
         state.input_file_ids = [u.file_id for u in uploaded]
-
-        names = project_file_names or [u.name for u in uploaded if u.role == "Project application material"]
-        content = self._build_initial_user_content(uploaded, names)
-        state.messages.append({"role": "user", "content": content})
         state.save()
         return state
 
-    def _append_assistant_turn(
-        self,
-        state: ClaudeRunState,
-        response_text: str,
-        assistant_content: list[dict[str, Any]],
-    ) -> None:
-        state.messages.append({"role": "assistant", "content": assistant_content})
-        # Also save plain-text transcript for easy reading
-        if response_text.strip():
-            (state.run_dir / "last_assistant_text.md").write_text(response_text, encoding="utf-8")
+    # -------------------------------------------------------------------------
+    # 3-call production pipeline
+    # -------------------------------------------------------------------------
 
-    def run_production(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
-        response_text, assistant_content, _ = self._call_claude(state)
-        self._append_assistant_turn(state, response_text, assistant_content)
+    def run_assessment(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
+        """Call 1: read all files → structured JSON project spec."""
+        prompt = (settings.prompts_dir / "call1_assessment.md").read_text(encoding="utf-8")
+        all_files = self._get_uploaded_files(state)
+
+        content: list[dict[str, Any]] = [{"type": "text", "text": prompt}]
+        content.extend(build_file_attachment_blocks(all_files))
+
+        response_text, _, _ = self._fresh_call(state, content)
+
+        state.project_spec = _extract_json_spec(response_text)
+        if not state.project_spec:
+            logger.warning("Call 1 response contained no JSON spec — raw text saved")
+        state.phases_completed = max(state.phases_completed, 1)
+        self._save_phase_response(state, 1, response_text)
+        state.save()
+        return state, response_text
+
+    def run_workbook_build(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
+        """Call 2: spec + template workbook → build workbook via code execution."""
+        spec_dict: dict[str, Any] = {}
+        if state.project_spec:
+            try:
+                spec_dict = json.loads(state.project_spec)
+            except json.JSONDecodeError:
+                logger.warning("Could not parse project_spec JSON")
+
+        template_name = spec_dict.get("project", {}).get(
+            "workbook_template", "example_workbook.xlsx"
+        )
+
+        all_files = self._get_uploaded_files(state)
+        template_files = [f for f in all_files if f.name == template_name]
+        if not template_files:
+            logger.warning(
+                "Template %s not found in uploaded files; attaching all reference workbooks",
+                template_name,
+            )
+            template_files = [
+                f for f in all_files
+                if Path(f.name).suffix.lower() in {".xlsx", ".xlsm"}
+                and f.role != "Project application material"
+            ]
+
+        valid_tabs = "\n".join(get_guide_workbook_tabs())
+        prompt_template = (settings.prompts_dir / "call2_workbook.md").read_text(encoding="utf-8")
+        prompt = prompt_template.format(
+            project_spec=state.project_spec or "(no spec available)",
+            valid_tabs=valid_tabs or "(see workbook)",
+        )
+
+        content: list[dict[str, Any]] = [{"type": "text", "text": prompt}]
+        content.extend(build_file_attachment_blocks(template_files))
+
+        response_text, _, output_file_ids = self._fresh_call(state, content)
+
+        state.workbook_output_file_ids = output_file_ids
+        state.last_output_file_ids = output_file_ids
+        state.workbook_results = _extract_workbook_results(response_text)
+        state.phases_completed = max(state.phases_completed, 4)
+        self._save_phase_response(state, 4, response_text)
+        state.save()
+        return state, response_text
+
+    def run_memo_write(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
+        """Call 3: spec + workbook results → write BCA memo."""
+        all_files = self._get_uploaded_files(state)
+        style_files = [f for f in all_files if f.name in {"example_memo.pdf", "guide_memo.pdf"}]
+
+        prompt_template = (settings.prompts_dir / "call3_memo.md").read_text(encoding="utf-8")
+        prompt = prompt_template.format(
+            project_spec=state.project_spec or "(no spec available)",
+            workbook_results=state.workbook_results
+            or "(workbook results not captured — use project spec estimates)",
+        )
+
+        content: list[dict[str, Any]] = [{"type": "text", "text": prompt}]
+        content.extend(build_file_attachment_blocks(style_files))
+
+        response_text, _, _ = self._fresh_call(state, content)
+
         state.phases_completed = 6
         self._save_phase_response(state, 6, response_text)
         state.save()
         return state, response_text
 
-    def run_phase_step(self, state: ClaudeRunState, phase_num: int) -> tuple[ClaudeRunState, str]:
-        if phase_num < 1 or phase_num > 6:
-            raise ValueError(f"phase_num must be 1–6, got {phase_num}")
-
-        if phase_num == 1 and not any(m["role"] == "assistant" for m in state.messages):
-            prompt = (
-                "Begin Phase 1 — Project Assessment. "
-                "Read the attached files directly. Complete this phase thoroughly."
-            )
-        else:
-            prompt = (
-                f"Continue with Phase {phase_num} — {PHASE_NAMES[phase_num - 1]}. "
-                "Use code execution to edit the workbook file as needed."
-            )
-            if phase_num == 6:
-                prompt += (
-                    " Save the final workbook via code execution (e.g. workbook_v"
-                    f"{state.iteration}.xlsx). Output the memo between --- MEMO START/END ---."
-                )
-
-        state.messages.append({"role": "user", "content": prompt})
-        response_text, assistant_content, _ = self._call_claude(state)
-        self._append_assistant_turn(state, response_text, assistant_content)
-        state.phases_completed = max(state.phases_completed, phase_num)
-        self._save_phase_response(state, phase_num, response_text)
-        state.save()
-        return state, response_text
+    # -------------------------------------------------------------------------
+    # Revision (fresh call with spec + prior workbook + review feedback)
+    # -------------------------------------------------------------------------
 
     def revise_from_review(
         self,
         state: ClaudeRunState,
         review_text: str,
     ) -> tuple[ClaudeRunState, str]:
-        from src.anthropic_files import upload_path
-
         template = (settings.prompts_dir / "revision_user.md").read_text(encoding="utf-8")
         next_version = state.iteration + 1
+        valid_tabs = "\n".join(get_guide_workbook_tabs())
         user_msg = template.format(
             review_text=review_text,
             version=next_version,
+            valid_tabs=valid_tabs or "(see workbook)",
         )
+
         content: list[dict[str, Any]] = [{"type": "text", "text": user_msg}]
+
         for ext in (".xlsm", ".xlsx"):
             prior_wb = state.run_dir / f"workbook_v{state.iteration}{ext}"
             if prior_wb.exists():
@@ -303,12 +389,18 @@ class ClaudeBCAClient:
                 break
 
         state.iteration = next_version
-        state.messages.append({"role": "user", "content": content})
-        response_text, assistant_content, _ = self._call_claude(state)
-        self._append_assistant_turn(state, response_text, assistant_content)
+        response_text, _, output_file_ids = self._fresh_call(state, content)
+
+        state.workbook_output_file_ids = output_file_ids
+        state.last_output_file_ids = output_file_ids
+        state.workbook_results = _extract_workbook_results(response_text) or state.workbook_results
         self._save_phase_response(state, 6, response_text, suffix=f"_rev{state.iteration}")
         state.save()
         return state, response_text
+
+    # -------------------------------------------------------------------------
+    # Artifact export
+    # -------------------------------------------------------------------------
 
     def _save_phase_response(
         self,
@@ -325,6 +417,8 @@ class ClaudeBCAClient:
         self,
         state: ClaudeRunState,
         response_text: str,
+        *,
+        workbook_file_ids: list[str] | None = None,
     ) -> dict[str, Any]:
         version = state.iteration
         memo_md = extract_memo_from_text(response_text)
@@ -351,7 +445,8 @@ class ClaudeBCAClient:
             result["memo_path"] = str(memo_path)
             result["memo_md_path"] = str(memo_md_path)
 
-        wb_path = self._export_workbook_from_code_execution(state, version)
+        wb_file_ids = workbook_file_ids if workbook_file_ids is not None else state.last_output_file_ids
+        wb_path = self._export_workbook_from_code_execution(state, version, file_ids=wb_file_ids)
         if wb_path:
             result["workbook_path"] = str(wb_path)
             result["workbook_source"] = "code_execution"
@@ -386,13 +481,12 @@ class ClaudeBCAClient:
         self,
         state: ClaudeRunState,
         version: int,
+        *,
+        file_ids: list[str] | None = None,
     ) -> Path | None:
+        output_ids = file_ids if file_ids is not None else state.last_output_file_ids
         input_ids = set(state.input_file_ids)
-        file_id = pick_workbook_file_id(
-            self.client,
-            state.last_output_file_ids,
-            input_file_ids=input_ids,
-        )
+        file_id = pick_workbook_file_id(self.client, output_ids, input_file_ids=input_ids)
         if not file_id:
             return None
 

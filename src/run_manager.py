@@ -9,7 +9,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
 
-from src.claude_client import ClaudeBCAClient, ClaudeRunState, PHASE_NAMES
+from src.claude_client import CALL_NAMES, ClaudeBCAClient, ClaudeRunState
 from src.config import settings
 from src.claude_reviewer import ClaudeReviewer
 
@@ -116,25 +116,34 @@ class BCARunManager:
             raise RuntimeError("No active run")
 
         self.record.status = RunStatus.PRODUCTION
-        self.record.append_log("Starting Claude production (Phases 1–6, one API call per phase)")
+        self.record.append_log("Starting Claude production (3 focused API calls)")
         self._notify()
 
         try:
-            for phase in range(1, 7):
-                self.record.append_log(f"Phase {phase}/6 — {PHASE_NAMES[phase - 1]}")
-                self._notify()
-                self.claude_state, response = self.claude.run_phase_step(
-                    self.claude_state, phase
-                )
+            self.record.append_log(f"Call 1/3 — {CALL_NAMES[0]}")
+            self._notify()
+            self.claude_state, _ = self.claude.run_assessment(self.claude_state)
 
-            artifacts = self.claude.export_artifacts(self.claude_state, response)
+            self.record.append_log(f"Call 2/3 — {CALL_NAMES[1]}")
+            self._notify()
+            self.claude_state, _ = self.claude.run_workbook_build(self.claude_state)
+
+            self.record.append_log(f"Call 3/3 — {CALL_NAMES[2]}")
+            self._notify()
+            self.claude_state, memo_response = self.claude.run_memo_write(self.claude_state)
+
+            artifacts = self.claude.export_artifacts(
+                self.claude_state,
+                memo_response,
+                workbook_file_ids=self.claude_state.workbook_output_file_ids,
+            )
             self.record.current_version = self.claude_state.iteration
             self.record.last_artifacts = artifacts
             self.record.status = RunStatus.COMPLETE
             self.record.append_log(
                 f"Production complete — v{artifacts['version']}: "
                 f"memo={'yes' if artifacts.get('memo_path') else 'no'}, "
-                f"patches applied={artifacts.get('patches_applied', 0)}"
+                f"workbook={'yes' if artifacts.get('workbook_path') else 'no'}"
             )
             if artifacts.get("warnings"):
                 for w in artifacts["warnings"]:
@@ -200,7 +209,11 @@ class BCARunManager:
                 self.claude_state,
                 self.record.last_review["review_text"],
             )
-            artifacts = self.claude.export_artifacts(self.claude_state, response)
+            artifacts = self.claude.export_artifacts(
+                self.claude_state,
+                response,
+                workbook_file_ids=self.claude_state.workbook_output_file_ids,
+            )
             self.record.current_version = self.claude_state.iteration
             self.record.last_artifacts = artifacts
             self.record.status = RunStatus.COMPLETE
