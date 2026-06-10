@@ -281,6 +281,29 @@ def download_file(client: anthropic.Anthropic, file_id: str, dest: Path) -> Path
     return dest
 
 
+_BLOCK_ALLOWED_KEYS: dict[str, set[str]] = {
+    "text": {"type", "text"},
+    "image": {"type", "source"},
+    "tool_use": {"type", "id", "name", "input"},
+    "tool_result": {"type", "tool_use_id", "content", "is_error"},
+    "document": {"type", "source", "title", "context", "citations"},
+    "thinking": {"type", "thinking", "signature"},
+    "redacted_thinking": {"type", "data"},
+    "server_tool_use": {"type", "id", "name", "input"},
+    "web_search_tool_result": {"type", "tool_use_id", "content"},
+    "code_execution_tool_result": {"type", "tool_use_id", "content"},
+    "mcp_tool_use": {"type", "id", "name", "server_name", "input"},
+    "mcp_tool_result": {"type", "tool_use_id", "content", "is_error"},
+}
+
+
+def _clean_block(d: dict[str, Any]) -> dict[str, Any]:
+    allowed = _BLOCK_ALLOWED_KEYS.get(d.get("type", ""), None)
+    if allowed is None:
+        return d
+    return {k: v for k, v in d.items() if k in allowed}
+
+
 def serialize_content_blocks(blocks: Any) -> list[dict[str, Any]] | str:
     if isinstance(blocks, str):
         return blocks
@@ -288,9 +311,9 @@ def serialize_content_blocks(blocks: Any) -> list[dict[str, Any]] | str:
         out: list[dict[str, Any]] = []
         for block in blocks:
             if hasattr(block, "model_dump"):
-                out.append(block.model_dump())
+                out.append(_clean_block(block.model_dump()))
             elif isinstance(block, dict):
-                out.append(block)
+                out.append(_clean_block(block))
             else:
                 out.append({"type": "text", "text": str(block)})
         return out
