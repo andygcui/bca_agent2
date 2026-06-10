@@ -318,10 +318,15 @@ class ClaudeBCAClient:
             ]
 
         valid_tabs = "\n".join(get_guide_workbook_tabs())
+        skill_md = (settings.prompts_dir / "SKILL.md").read_text(encoding="utf-8")
         prompt_template = (settings.prompts_dir / "call2_workbook.md").read_text(encoding="utf-8")
-        prompt = prompt_template.format(
-            project_spec=state.project_spec or "(no spec available)",
-            valid_tabs=valid_tabs or "(see workbook)",
+        prompt = (
+            skill_md
+            + "\n\n---\n\n"
+            + prompt_template.format(
+                project_spec=state.project_spec or "(no spec available)",
+                valid_tabs=valid_tabs or "(see workbook)",
+            )
         )
 
         content: list[dict[str, Any]] = [{"type": "text", "text": prompt}]

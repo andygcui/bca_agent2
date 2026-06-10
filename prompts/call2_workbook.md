@@ -1,35 +1,28 @@
+**IMPORTANT: The openpyxl SKILL reference has been prepended above. Read it completely before writing any code.**
+
 Build the BCA workbook using code execution (openpyxl).
 
 The project specification JSON below is your authoritative source for all inputs and assumptions. The appropriate template workbook is attached — open it as your base.
 
-## Workbook build rules
+## Build sequence (follow in order)
 
-### Python / openpyxl patterns (follow exactly)
+1. **Open the template** using the correct `keep_vba` parameter (see SKILL.md §7).
+2. **Plan before writing**: identify all input cells to populate. Print their addresses before writing.
+3. **Write inputs** using `safe_write()` (see SKILL.md §6) — never overwrite a formula cell.
+4. **Apply formatting** per SKILL.md §§1–5: fill colors, font colors, alignment, column widths, freeze panes.
+5. **Save** as `workbook_v1.xlsx`.
+6. **Run verification** (see SKILL.md §8). If errors are found, fix them and verify again.
+7. **Output results** only after verification passes.
 
-- Open the attached template with `openpyxl.load_workbook(filename, keep_vba=True)` (or `keep_vba=False` for .xlsx).
-- Use `ShadingType.CLEAR` (NOT `ShadingType.SOLID`) for all cell fills — SOLID causes black backgrounds.
-- Apply an explicit `Alignment` object on every styled cell (even if just `Alignment(wrap_text=False)`).
-- Set column widths with `ws.column_dimensions['A'].width = 18` AND apply cell-level number formats.
-- Freeze panes on every data sheet (e.g., `ws.freeze_panes = "A2"` or `"B2"`).
-- Color coding:
-  - Blue text `"FF0070C0"` for hardcoded input values
-  - Black text `"FF000000"` for cells containing formulas
-  - Green text `"FF00B050"` for cross-sheet reference inputs
-- Use `PatternFill(fill_type="solid", fgColor="FFD9E1F2")` for input cell backgrounds (light blue).
+## Data integrity rules
 
-### Data integrity
-
-- **Preserve formulas.** Only write to input cells. Never overwrite a formula cell with a hardcoded value unless replacing it with a new formula.
-- If a cell already has a formula, leave it alone.
-- All monetary inputs in the workbook should be in the same units the workbook expects (check the template headers — usually $, not $M).
-
-### Save
-
-Save the completed workbook via code execution as `workbook_v1.xlsx`.
+- Only write to input cells. Never overwrite a formula cell with a hardcoded value.
+- All monetary inputs must be in the units the workbook expects — check the template headers (usually $, not $M).
+- Use the `safe_write()` helper from SKILL.md on every cell write.
 
 ## Output required
 
-After saving, output the key computed results as text between these exact markers:
+After verification passes, output the key computed results between these exact markers:
 
 --- WORKBOOK RESULTS START ---
 BCR (7%): [value]
@@ -41,6 +34,7 @@ NPV at 3% ($M): [value, if computed]
 Analysis period (years): [value]
 Base year: [value]
 Key benefit categories included: [comma-separated list]
+Verification status: PASSED / FAILED [n errors]
 --- WORKBOOK RESULTS END ---
 
 If code execution fails to save the file, output a patch list as a last resort:
