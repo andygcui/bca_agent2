@@ -113,9 +113,8 @@ class ClaudeBCAClient:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         return f"run_{ts}"
 
-    def _load_production_prompt(self, valid_tabs: list[str]) -> str:
-        template = (settings.prompts_dir / "production_manual.md").read_text(encoding="utf-8")
-        return template.replace("{valid_tabs}", "\n".join(f"- {t}" for t in valid_tabs))
+    def _load_production_prompt(self) -> str:
+        return (settings.prompts_dir / "production_manual.md").read_text(encoding="utf-8")
 
     def _upload_run_files(
         self,
@@ -133,8 +132,7 @@ class ClaudeBCAClient:
         uploaded: list[UploadedFile],
         project_file_names: list[str],
     ) -> list[dict[str, Any]]:
-        valid_tabs = get_guide_workbook_tabs()
-        prompt = self._load_production_prompt(valid_tabs)
+        prompt = self._load_production_prompt()
 
         blocks: list[dict[str, Any]] = [
             {
@@ -149,16 +147,6 @@ class ClaudeBCAClient:
             }
         ]
         blocks.extend(build_file_attachment_blocks(uploaded))
-        blocks.append(
-            {
-                "type": "text",
-                "text": (
-                    "Begin Phase 1 now. Work through all six phases. "
-                    "Use code execution to build the workbook from the attached template files. "
-                    "At Phase 6, save the completed workbook file and output the memo in your response."
-                ),
-            }
-        )
         return blocks
 
     def _api_messages(self, state: ClaudeRunState) -> list[dict[str, Any]]:
@@ -166,6 +154,16 @@ class ClaudeBCAClient:
         for msg in state.messages:
             api_msgs.append({"role": msg["role"], "content": msg["content"]})
         return api_msgs
+
+    _SYSTEM_PROMPT = (
+        "You are a senior transportation economist and infrastructure finance consultant "
+        "with extensive experience preparing USDOT BUILD, RAISE, INFRA, MEGA, CRISI, BIP, "
+        "and other discretionary grant benefit-cost analyses. "
+        "Your work is reviewed by USDOT economists and must be technically rigorous, "
+        "transparent, and fully traceable. "
+        "Every formula in the workbook must be live and reference the inputs tab — "
+        "never hardcode a number that derives from an input."
+    )
 
     def _call_claude(
         self,
@@ -182,6 +180,7 @@ class ClaudeBCAClient:
         with self.client.beta.messages.stream(
             model=state.model,
             max_tokens=settings.claude_max_tokens,
+            system=self._SYSTEM_PROMPT,
             messages=self._api_messages(state),
             tools=code_execution_tools(),
             betas=anthropic_betas(),
@@ -288,11 +287,9 @@ class ClaudeBCAClient:
         from src.anthropic_files import upload_path
 
         template = (settings.prompts_dir / "revision_user.md").read_text(encoding="utf-8")
-        valid_tabs = get_guide_workbook_tabs()
         next_version = state.iteration + 1
         user_msg = template.format(
             review_text=review_text,
-            valid_tabs="\n".join(f"- {t}" for t in valid_tabs),
             version=next_version,
         )
         content: list[dict[str, Any]] = [{"type": "text", "text": user_msg}]

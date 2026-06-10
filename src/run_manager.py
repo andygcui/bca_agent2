@@ -11,7 +11,7 @@ from typing import Any, Callable
 
 from src.claude_client import ClaudeBCAClient, ClaudeRunState
 from src.config import settings
-from src.gpt_reviewer import GPTReviewer
+from src.claude_reviewer import ClaudeReviewer
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class BCARunManager:
         on_status: Callable[[RunRecord], None] | None = None,
     ) -> None:
         self.claude = ClaudeBCAClient()
-        self.reviewer = GPTReviewer()
+        self.reviewer = ClaudeReviewer()
         self.on_status = on_status
         self.record: RunRecord | None = None
         self.claude_state: ClaudeRunState | None = None
@@ -111,24 +111,21 @@ class BCARunManager:
         self._notify()
         return self.record
 
-    def run_production(self, *, stepped: bool = False) -> dict[str, Any]:
+    def run_production(self) -> dict[str, Any]:
         if not self.record or not self.claude_state:
             raise RuntimeError("No active run")
 
         self.record.status = RunStatus.PRODUCTION
-        self.record.append_log("Starting Claude production (Phases 1–6)")
+        self.record.append_log("Starting Claude production (Phases 1–6, one API call per phase)")
         self._notify()
 
         try:
-            if stepped:
-                for phase in range(1, 7):
-                    self.record.append_log(f"Phase {phase}/6")
-                    self._notify()
-                    self.claude_state, response = self.claude.run_phase_step(
-                        self.claude_state, phase
-                    )
-            else:
-                self.claude_state, response = self.claude.run_production(self.claude_state)
+            for phase in range(1, 7):
+                self.record.append_log(f"Phase {phase}/6 — {self.claude.PHASE_NAMES[phase - 1]}")
+                self._notify()
+                self.claude_state, response = self.claude.run_phase_step(
+                    self.claude_state, phase
+                )
 
             artifacts = self.claude.export_artifacts(self.claude_state, response)
             self.record.current_version = self.claude_state.iteration
@@ -161,7 +158,7 @@ class BCARunManager:
             raise RuntimeError("No artifacts to review — run production first")
 
         self.record.status = RunStatus.REVIEW
-        self.record.append_log(f"Starting GPT review of v{version}")
+        self.record.append_log(f"Starting Claude review of v{version}")
         self._notify()
 
         try:
@@ -192,10 +189,10 @@ class BCARunManager:
         if not self.record or not self.claude_state:
             raise RuntimeError("No active run")
         if not self.record.last_review.get("review_text"):
-            raise RuntimeError("No review text — run GPT review first")
+            raise RuntimeError("No review text — run review first")
 
         self.record.status = RunStatus.REVISION
-        self.record.append_log("Starting Claude revision from GPT feedback")
+        self.record.append_log("Starting Claude revision from review feedback")
         self._notify()
 
         try:
@@ -226,9 +223,9 @@ class BCARunManager:
             return False
         return self.record.reviews_completed < self.record.max_iterations
 
-    def run_full_loop(self, *, stepped: bool = False) -> RunRecord:
+    def run_full_loop(self) -> RunRecord:
         """Production → (review → revision) × max_iterations."""
-        self.run_production(stepped=stepped)
+        self.run_production()
         while self.record and self.record.reviews_completed < self.record.max_iterations:
             self.run_review()
             if self.record.reviews_completed < self.record.max_iterations:

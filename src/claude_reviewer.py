@@ -1,12 +1,13 @@
-"""OpenAI GPT reviewer — separate vendor from Claude production."""
+"""Claude reviewer — independent review pass on exported artifacts."""
 
 from __future__ import annotations
 
 import logging
+import re
 from pathlib import Path
 from typing import Any
 
-from openai import OpenAI
+import anthropic
 
 from src.config import settings
 from src.document_ingest import extract_text
@@ -16,13 +17,16 @@ from src.workbook_export import workbook_context_for_prompt
 logger = logging.getLogger(__name__)
 
 
-class GPTReviewer:
+class ClaudeReviewer:
     def __init__(self, api_key: str | None = None) -> None:
-        key = api_key or settings.openai_api_key
+        key = api_key or settings.anthropic_api_key
         if not key:
-            raise ValueError("OPENAI_API_KEY is required")
-        self.client = OpenAI(api_key=key)
-        self.model = settings.gpt_review_model
+            raise ValueError("ANTHROPIC_API_KEY is required")
+        self.client = anthropic.Anthropic(
+            api_key=key,
+            timeout=settings.anthropic_timeout,
+        )
+        self.model = settings.claude_review_model
 
     def _load_system_prompt(self) -> str:
         return (settings.prompts_dir / "review_gpt.md").read_text(encoding="utf-8")
@@ -53,17 +57,19 @@ class GPTReviewer:
         project_text: str,
         project_files: list[str] | None = None,
     ) -> dict[str, Any]:
-        """Run GPT review on exported memo + workbook + original docs."""
+        """Run Claude review on exported memo + workbook + project context."""
         reviews_dir = run_dir / "reviews"
         reviews_dir.mkdir(parents=True, exist_ok=True)
 
         memo_path = self._find_memo(run_dir, version)
         workbook_path = self._find_workbook(run_dir, version)
 
-        ref_text, loaded_refs, ref_warnings = load_reference_bundle()
+        ref_text, _loaded_refs, ref_warnings = load_reference_bundle()
 
         user_parts = [
             self._load_system_prompt(),
+            "",
+            "You are reviewing a BCA package you did NOT author. Be direct and critical.",
             "",
             "## Reference documents",
             ref_text or "(no reference text loaded)",
@@ -85,24 +91,23 @@ class GPTReviewer:
 
         user_content = "\n".join(user_parts)
 
-        response = self.client.chat.completions.create(
+        logger.info("Claude review request (model=%s, version=%s)", self.model, version)
+        response = self.client.messages.create(
             model=self.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an independent USDOT BCA reviewer. Output plain text only.",
-                },
-                {"role": "user", "content": user_content},
-            ],
             max_tokens=16000,
+            system="You are an independent USDOT BCA reviewer. Output plain text only.",
+            messages=[{"role": "user", "content": user_content}],
         )
 
-        review_text = response.choices[0].message.content or ""
+        review_text = ""
+        for block in response.content:
+            if block.type == "text":
+                review_text += block.text
+
         review_path = reviews_dir / f"review_v{version}.md"
         review_path.write_text(review_text, encoding="utf-8")
 
         scores = _extract_scores(review_text)
-
         usage = response.usage
         return {
             "version": version,
@@ -111,8 +116,9 @@ class GPTReviewer:
             "scores": scores,
             "memo_path": str(memo_path) if memo_path else None,
             "workbook_path": str(workbook_path) if workbook_path else None,
-            "input_tokens": usage.prompt_tokens if usage else 0,
-            "output_tokens": usage.completion_tokens if usage else 0,
+            "input_tokens": usage.input_tokens if usage else 0,
+            "output_tokens": usage.output_tokens if usage else 0,
+            "review_model": self.model,
         }
 
     def _find_memo(self, run_dir: Path, version: int) -> Path | None:
@@ -133,9 +139,6 @@ class GPTReviewer:
 
 
 def _extract_scores(review_text: str) -> dict[str, float | None]:
-    """Best-effort parse of overall quality score from plain text."""
-    import re
-
     scores: dict[str, float | None] = {"overall": None}
     patterns = [
         r"overall\s+quality[^0-9]*(\d+(?:\.\d+)?)\s*/\s*10",

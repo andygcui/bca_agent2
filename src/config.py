@@ -18,10 +18,9 @@ class Settings:
     prompts_dir: Path = _ROOT / "prompts"
 
     anthropic_api_key: str = os.getenv("ANTHROPIC_API_KEY", "")
-    openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
 
     claude_model: str = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-6")
-    gpt_review_model: str = os.getenv("GPT_REVIEW_MODEL", "gpt-4.1")
+    claude_review_model: str = os.getenv("CLAUDE_REVIEW_MODEL", "claude-opus-4-8")
     max_review_iterations: int = int(os.getenv("MAX_REVIEW_ITERATIONS", "3"))
 
     # compact_extract = labels + formulas only (default)

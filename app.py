@@ -124,8 +124,8 @@ def render_run_controls() -> None:
 
     with col2:
         can_review = record and record.current_version >= 1
-        if st.button("Run GPT Review", disabled=not can_review):
-            with st.spinner("GPT reviewing artifacts…"):
+        if st.button("Run Claude Review", disabled=not can_review):
+            with st.spinner("Claude reviewing artifacts…"):
                 try:
                     manager.run_review()
                     st.success("Review complete")
@@ -233,7 +233,7 @@ def render_review() -> None:
     if not record or not record.last_review:
         return
 
-    st.subheader("GPT Review")
+    st.subheader("Claude Review")
     review = record.last_review
     score = review.get("scores", {}).get("overall")
     if score is not None:
@@ -266,7 +266,7 @@ def main() -> None:
     init_session()
 
     st.title("BCA Agent")
-    st.caption("Conversation-first USDOT BUILD BCA — Claude production, GPT review")
+    st.caption("Conversation-first USDOT BUILD BCA — Claude production, review, and revision")
 
     with st.sidebar:
         st.header("Settings")
@@ -278,7 +278,7 @@ def main() -> None:
             help="1 = first draft only (+ optional single review). 3 = production + 3 review loops.",
         )
         st.text_input("Claude model", value=settings.claude_model, disabled=True)
-        st.text_input("GPT review model", value=settings.gpt_review_model, disabled=True)
+        st.text_input("Claude review model", value=settings.claude_review_model, disabled=True)
         st.text_input("Workbook mode", value=settings.reference_workbook_mode, disabled=True)
 
         st.divider()
@@ -304,7 +304,7 @@ def main() -> None:
         if n_bytes:
             st.success(
                 f"{n_bytes} file(s) ready for upload "
-                f"({len(st.session_state.project_text):,} chars extracted for GPT review)"
+                f"({len(st.session_state.project_text):,} chars extracted for review context)"
             )
 
     render_reference_status()
