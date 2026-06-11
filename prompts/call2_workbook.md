@@ -10,6 +10,8 @@ Build the BCA workbook using code execution (openpyxl).
 
 The project specification JSON below is your authoritative source for all inputs found in the project documents. The appropriate template workbook is attached — open it as your base.
 
+**How to read the spec:** Benefits are in `benefit_analyses[]`. Each entry has a `methodology` (how to calculate it), `required_variables[]` (inputs, each with `value` and `found` fields), and `can_calculate` (only true if all required variables are non-null). For any category where `can_calculate` is false and the engineer has not provided the missing value above, leave that benefit section blank in the workbook rather than inventing a number.
+
 ## Build sequence (follow in order)
 
 1. **Open the template** using the correct `keep_vba` parameter (see SKILL.md §7).
