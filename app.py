@@ -300,9 +300,9 @@ def render_gap_fill_form(record, manager: BCARunManager) -> None:
                     engineer_inputs[result[0]] = result[1]
 
     provided = len(engineer_inputs)
-    needed = len(required_gaps)
+    needed = len(critical_gaps)
     if provided < needed:
-        st.caption(f"{provided} of {needed} required inputs filled in")
+        st.caption(f"{provided} of {needed} critical inputs filled in")
 
     col_submit, col_skip = st.columns(2)
     with col_submit:
