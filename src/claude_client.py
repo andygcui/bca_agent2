@@ -57,6 +57,24 @@ def _extract_json_spec(text: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+def _extract_data_request_sheet(text: str) -> str:
+    m = re.search(
+        r"---\s*DATA REQUEST SHEET START\s*---\s*([\s\S]*?)\s*---\s*DATA REQUEST SHEET END\s*---",
+        text,
+        re.IGNORECASE,
+    )
+    return m.group(1).strip() if m else ""
+
+
+def _format_engineer_inputs(engineer_inputs: dict[str, Any]) -> str:
+    if not engineer_inputs:
+        return "*(No engineer inputs provided — all values come from project documents or will use defaults.)*"
+    lines = []
+    for item, value in engineer_inputs.items():
+        lines.append(f"- **{item}**: {value}")
+    return "\n".join(lines)
+
+
 def _extract_workbook_results(text: str) -> str:
     m = re.search(
         r"---\s*WORKBOOK RESULTS START\s*---\s*([\s\S]*?)\s*---\s*WORKBOOK RESULTS END\s*---",
@@ -83,6 +101,10 @@ class ClaudeRunState:
     project_spec: str = ""
     workbook_results: str = ""
     workbook_output_file_ids: list[str] = field(default_factory=list)
+    # gap-fill workflow
+    data_gaps: list[dict[str, Any]] = field(default_factory=list)
+    data_request_sheet: str = ""
+    engineer_inputs: dict[str, Any] = field(default_factory=dict)
 
     def save(self) -> None:
         self.run_dir.mkdir(parents=True, exist_ok=True)
@@ -102,6 +124,9 @@ class ClaudeRunState:
                     "project_spec": self.project_spec,
                     "workbook_results": self.workbook_results,
                     "workbook_output_file_ids": self.workbook_output_file_ids,
+                    "data_gaps": self.data_gaps,
+                    "data_request_sheet": self.data_request_sheet,
+                    "engineer_inputs": self.engineer_inputs,
                     "messages": self.messages,
                 },
                 indent=2,
@@ -129,6 +154,9 @@ class ClaudeRunState:
             project_spec=data.get("project_spec", ""),
             workbook_results=data.get("workbook_results", ""),
             workbook_output_file_ids=data.get("workbook_output_file_ids", []),
+            data_gaps=data.get("data_gaps", []),
+            data_request_sheet=data.get("data_request_sheet", ""),
+            engineer_inputs=data.get("engineer_inputs", {}),
         )
 
 
@@ -274,7 +302,7 @@ class ClaudeBCAClient:
     # -------------------------------------------------------------------------
 
     def run_assessment(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
-        """Call 1: read all files → structured JSON project spec."""
+        """Call 1: read all files → structured JSON project spec + data request sheet."""
         prompt = (settings.prompts_dir / "call1_assessment.md").read_text(encoding="utf-8")
         all_files = self._get_uploaded_files(state)
 
@@ -286,6 +314,16 @@ class ClaudeBCAClient:
         state.project_spec = _extract_json_spec(response_text)
         if not state.project_spec:
             logger.warning("Call 1 response contained no JSON spec — raw text saved")
+
+        state.data_request_sheet = _extract_data_request_sheet(response_text)
+
+        if state.project_spec:
+            try:
+                spec = json.loads(state.project_spec)
+                state.data_gaps = spec.get("data_gaps", [])
+            except json.JSONDecodeError:
+                pass
+
         state.phases_completed = max(state.phases_completed, 1)
         self._save_phase_response(state, 1, response_text)
         state.save()
@@ -326,6 +364,7 @@ class ClaudeBCAClient:
             + prompt_template.format(
                 project_spec=state.project_spec or "(no spec available)",
                 valid_tabs=valid_tabs or "(see workbook)",
+                engineer_inputs=_format_engineer_inputs(state.engineer_inputs),
             )
         )
 
@@ -352,6 +391,7 @@ class ClaudeBCAClient:
             project_spec=state.project_spec or "(no spec available)",
             workbook_results=state.workbook_results
             or "(workbook results not captured — use project spec estimates)",
+            engineer_inputs=_format_engineer_inputs(state.engineer_inputs),
         )
 
         content: list[dict[str, Any]] = [{"type": "text", "text": prompt}]

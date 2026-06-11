@@ -1,6 +1,12 @@
 Write the complete BCA Technical Memorandum for this project.
 
-Use the project specification JSON and verified workbook results below as your data sources. The example memo and USDOT guidance are attached for structure and methodology reference — do NOT copy their values, only their format and narrative approach.
+## Engineer-provided inputs
+
+The specification below may contain null values. A transportation engineer has provided the following inputs to fill those gaps. **Treat these as authoritative and cite them as "Engineer-provided" in the memo.**
+
+{engineer_inputs}
+
+Use the project specification JSON, engineer-provided inputs, and verified workbook results below as your data sources. The example memo and USDOT guidance are attached for structure and methodology reference — do NOT copy their values, only their format and narrative approach.
 
 ## Memo requirements
 

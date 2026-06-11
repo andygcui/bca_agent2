@@ -1,8 +1,14 @@
 **IMPORTANT: The openpyxl SKILL reference has been prepended above. Read it completely before writing any code.**
 
+## Engineer-provided inputs (use these — they override null values in the spec)
+
+The project specification may contain `null` values where project documents did not include required data. A transportation engineer has reviewed the Data Request Sheet and provided the following inputs. **These values are authoritative. Use them wherever the spec shows null or 0 for that field.**
+
+{engineer_inputs}
+
 Build the BCA workbook using code execution (openpyxl).
 
-The project specification JSON below is your authoritative source for all inputs and assumptions. The appropriate template workbook is attached — open it as your base.
+The project specification JSON below is your authoritative source for all inputs found in the project documents. The appropriate template workbook is attached — open it as your base.
 
 ## Build sequence (follow in order)
 

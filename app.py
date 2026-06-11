@@ -103,11 +103,22 @@ def render_run_controls() -> None:
     record = st.session_state.run_record
     manager: BCARunManager = st.session_state.manager
 
-    col1, col2, col3 = st.columns(3)
+    st.subheader("Step 1 — Extract Evidence from Documents")
+    st.caption(
+        "Claude reads your project documents, extracts every number it can find, "
+        "and identifies what data is missing. No assumptions are invented."
+    )
+
+    has_files = bool(st.session_state.get("project_file_bytes"))
+    col1, col2 = st.columns(2)
 
     with col1:
-        has_files = bool(st.session_state.get("project_file_bytes"))
-        if st.button("Run Phases 1–6 (Claude)", type="primary", disabled=not has_files):
+        if st.button(
+            "Extract & Identify Gaps",
+            type="primary",
+            disabled=not has_files,
+            help="Run Call 1: extract data from documents and generate the Data Request Sheet",
+        ):
             manager.create_run(
                 st.session_state.project_name,
                 st.session_state.project_text,
@@ -115,68 +126,173 @@ def render_run_controls() -> None:
                 st.session_state.get("project_file_bytes", []),
                 max_iterations=st.session_state.max_iterations,
             )
-            with st.spinner("Claude running Phases 1–6…"):
+            with st.spinner("Claude reading documents and identifying missing data…"):
+                try:
+                    manager.run_assessment()
+                    rec = st.session_state.run_record
+                    if rec and rec.status == RunStatus.AWAITING_INPUT:
+                        st.success("Extraction complete — review the Data Request Sheet below")
+                    else:
+                        st.success("Extraction complete — no missing data detected")
+                except Exception as exc:
+                    st.error(str(exc))
+
+    with col2:
+        if st.button(
+            "Skip Gap-Fill (bypass mode)",
+            disabled=not has_files,
+            help="Run all 3 calls without pausing for engineer input. Less reliable for USDOT review.",
+        ):
+            manager.create_run(
+                st.session_state.project_name,
+                st.session_state.project_text,
+                st.session_state.project_files,
+                st.session_state.get("project_file_bytes", []),
+                max_iterations=st.session_state.max_iterations,
+            )
+            with st.spinner("Claude running all 3 phases (bypass mode)…"):
                 try:
                     manager.run_production()
                     st.success("Production complete")
                 except Exception as exc:
                     st.error(str(exc))
 
-    with col2:
-        can_review = record and record.current_version >= 1
-        if st.button("Run Claude Review", disabled=not can_review):
-            with st.spinner("Claude reviewing artifacts…"):
+    # Step 2 gap-fill form (shown when assessment is awaiting engineer input)
+    record = st.session_state.run_record
+    if record and record.status == RunStatus.AWAITING_INPUT:
+        render_gap_fill_form(record, manager)
+    elif record and record.data_gaps and record.status != RunStatus.AWAITING_INPUT:
+        with st.expander("Data Request Sheet (submitted)", expanded=False):
+            if record.data_request_sheet:
+                st.markdown(record.data_request_sheet)
+
+    # Step 3 review / revision controls
+    record = st.session_state.run_record
+    if record and record.current_version >= 1:
+        st.divider()
+        st.subheader("Step 3 — Review & Revision")
+        col3, col4 = st.columns(2)
+
+        with col3:
+            if st.button("Run Claude Review"):
+                with st.spinner("Claude reviewing artifacts…"):
+                    try:
+                        manager.run_review()
+                        st.success("Review complete")
+                    except Exception as exc:
+                        st.error(str(exc))
+
+        with col4:
+            can_revise = record and record.last_review.get("review_text")
+            if st.button("Revise from Review (Claude)", disabled=not can_revise):
+                with st.spinner("Claude revising…"):
+                    try:
+                        manager.run_revision()
+                        st.success("Revision complete")
+                    except Exception as exc:
+                        st.error(str(exc))
+
+
+def render_gap_fill_form(record, manager: BCARunManager) -> None:
+    st.divider()
+    st.subheader("Step 2 — Engineer Inputs Required")
+    st.info(
+        "Claude identified the following missing data points. Provide values "
+        "from your traffic model outputs, crash database, CMF Clearinghouse, or engineering analysis. "
+        "Leave blank if a value is unavailable — it will be noted as missing in the BCA."
+    )
+
+    if record.data_request_sheet:
+        with st.expander("Data Request Sheet", expanded=True):
+            st.markdown(record.data_request_sheet)
+
+    st.markdown("**Enter values below:**")
+    engineer_inputs: dict[str, str] = {}
+
+    gaps = record.data_gaps or []
+    if not gaps:
+        st.warning("No structured gap data — enter values as free text.")
+        free_text = st.text_area(
+            "Engineer inputs (one per line: 'Input name: value')",
+            height=200,
+            placeholder="No-build delay (sec/vehicle): 33.8\nBuild delay (sec/vehicle): 33.1\nCMF ID: 7569\nCMF value: 0.712",
+        )
+        col_a, col_b = st.columns(2)
+        with col_a:
+            if st.button("Submit Inputs & Build BCA", type="primary"):
+                parsed: dict[str, str] = {}
+                for line in free_text.strip().splitlines():
+                    if ":" in line:
+                        k, _, v = line.partition(":")
+                        parsed[k.strip()] = v.strip()
+                with st.spinner("Building workbook and writing memo…"):
+                    try:
+                        manager.submit_engineer_inputs(parsed)
+                        st.success("BCA complete")
+                        st.rerun()
+                    except Exception as exc:
+                        st.error(str(exc))
+        with col_b:
+            if st.button("Build BCA Without These Inputs"):
+                with st.spinner("Building BCA — missing inputs noted as unavailable…"):
+                    try:
+                        manager.submit_engineer_inputs({})
+                        st.success("BCA complete")
+                        st.rerun()
+                    except Exception as exc:
+                        st.error(str(exc))
+        return
+
+    required_gaps = [g for g in gaps if g.get("required", True)]
+    optional_gaps = [g for g in gaps if not g.get("required", True)]
+
+    if required_gaps:
+        st.markdown("**Required**")
+        for gap in required_gaps:
+            label = gap.get("item", "Unknown input")
+            source_hint = gap.get("preferred_source", "")
+            help_text = f"Source: {source_hint}" if source_hint else ""
+            key = f"gap_{gap.get('json_path', label)}"
+            val = st.text_input(label, key=key, help=help_text, placeholder="e.g. 33.8")
+            if val.strip():
+                engineer_inputs[label] = val.strip()
+
+    if optional_gaps:
+        with st.expander(f"Optional inputs ({len(optional_gaps)})"):
+            for gap in optional_gaps:
+                label = gap.get("item", "Unknown input")
+                source_hint = gap.get("preferred_source", "")
+                help_text = f"Source: {source_hint}" if source_hint else ""
+                key = f"gap_opt_{gap.get('json_path', label)}"
+                val = st.text_input(label, key=key, help=help_text, placeholder="(leave blank to skip)")
+                if val.strip():
+                    engineer_inputs[label] = val.strip()
+
+    provided = len(engineer_inputs)
+    needed = len(required_gaps)
+    if provided < needed:
+        st.caption(f"{provided} of {needed} required inputs filled in")
+
+    col_submit, col_skip = st.columns(2)
+    with col_submit:
+        if st.button("Submit Inputs & Build BCA", type="primary"):
+            with st.spinner("Building workbook and writing memo with your inputs…"):
                 try:
-                    manager.run_review()
-                    st.success("Review complete")
+                    manager.submit_engineer_inputs(engineer_inputs)
+                    st.success("BCA complete")
+                    st.rerun()
                 except Exception as exc:
                     st.error(str(exc))
 
-    with col3:
-        can_revise = record and record.last_review.get("review_text")
-        if st.button("Revise from Review (Claude)", disabled=not can_revise):
-            with st.spinner("Claude revising…"):
+    with col_skip:
+        if st.button("Build BCA Without These Inputs"):
+            with st.spinner("Building BCA — missing inputs noted as unavailable…"):
                 try:
-                    manager.run_revision()
-                    st.success("Revision complete")
+                    manager.submit_engineer_inputs({})
+                    st.success("BCA complete")
+                    st.rerun()
                 except Exception as exc:
                     st.error(str(exc))
-
-    stepped = st.checkbox("Step through phases one at a time", value=False)
-    if stepped and st.button("Run next phase only"):
-        if not record:
-            manager.create_run(
-                st.session_state.project_name,
-                st.session_state.project_text,
-                st.session_state.project_files,
-                st.session_state.get("project_file_bytes", []),
-                max_iterations=st.session_state.max_iterations,
-            )
-            record = st.session_state.run_record
-        with st.spinner("Running next phase…"):
-            try:
-                phase = (manager.claude_state.phases_completed if manager.claude_state else 0) + 1
-                if phase > 6:
-                    st.info("All 6 phases complete")
-                else:
-                    manager.record.status = RunStatus.PRODUCTION
-                    manager.claude_state, response = manager.claude.run_phase_step(
-                        manager.claude_state, phase
-                    )
-                    if phase == 6:
-                        manager.record.last_artifacts = manager.claude.export_artifacts(
-                            manager.claude_state, response
-                        )
-                        manager.record.current_version = manager.claude_state.iteration
-                        manager.record.status = RunStatus.COMPLETE
-                    manager.record.append_log(f"Phase {phase}/6 complete")
-                    st.session_state.run_record = manager.record
-                    st.success(f"Phase {phase} complete")
-            except Exception as exc:
-                if manager.record:
-                    manager.record.status = RunStatus.ERROR
-                    manager.record.error = str(exc)
-                st.error(str(exc))
 
 
 def render_artifacts() -> None:
@@ -266,7 +382,7 @@ def main() -> None:
     init_session()
 
     st.title("BCA Agent")
-    st.caption("Conversation-first USDOT BUILD BCA — Claude production, review, and revision")
+    st.caption("Evidence-first USDOT BUILD BCA — Claude extracts data, engineer fills gaps, Claude builds the BCA")
 
     with st.sidebar:
         st.header("Settings")

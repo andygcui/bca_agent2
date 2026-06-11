@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 class RunStatus(str, Enum):
     IDLE = "idle"
     PRODUCTION = "production"
+    AWAITING_INPUT = "awaiting_input"
     REVIEW = "review"
     REVISION = "revision"
     COMPLETE = "complete"
@@ -39,6 +40,8 @@ class RunRecord:
     error: str = ""
     last_artifacts: dict[str, Any] = field(default_factory=dict)
     last_review: dict[str, Any] = field(default_factory=dict)
+    data_gaps: list[dict[str, Any]] = field(default_factory=list)
+    data_request_sheet: str = ""
     log: list[str] = field(default_factory=list)
 
     def append_log(self, msg: str) -> None:
@@ -105,24 +108,136 @@ class BCARunManager:
             run_id=self.claude_state.run_id,
             run_dir=run_dir,
             current_version=self.claude_state.iteration,
+            data_gaps=self.claude_state.data_gaps,
+            data_request_sheet=self.claude_state.data_request_sheet,
             status=RunStatus.IDLE,
         )
         self.record.append_log(f"Resumed run {self.claude_state.run_id}")
         self._notify()
         return self.record
 
-    def run_production(self) -> dict[str, Any]:
+    # -------------------------------------------------------------------------
+    # Step 1: extract evidence from documents, pause for engineer input
+    # -------------------------------------------------------------------------
+
+    def run_assessment(self) -> dict[str, Any]:
+        """Call 1 only — extract data from documents, identify gaps, pause."""
         if not self.record or not self.claude_state:
             raise RuntimeError("No active run")
 
         self.record.status = RunStatus.PRODUCTION
-        self.record.append_log("Starting Claude production (3 focused API calls)")
+        self.record.append_log(f"Call 1/3 — {CALL_NAMES[0]}")
+        self._notify()
+
+        try:
+            self.claude_state, _ = self.claude.run_assessment(self.claude_state)
+            self.record.data_gaps = self.claude_state.data_gaps
+            self.record.data_request_sheet = self.claude_state.data_request_sheet
+
+            gap_count = len(self.record.data_gaps)
+            if gap_count:
+                self.record.status = RunStatus.AWAITING_INPUT
+                self.record.append_log(
+                    f"Assessment complete — {gap_count} missing input(s) identified. "
+                    "Provide engineer inputs to continue."
+                )
+            else:
+                self.record.status = RunStatus.COMPLETE
+                self.record.append_log("Assessment complete — no missing inputs detected")
+        except Exception as exc:
+            self.record.status = RunStatus.ERROR
+            self.record.error = str(exc)
+            self.record.append_log(f"Assessment error: {exc}")
+            raise
+        finally:
+            self._notify()
+
+        return {
+            "data_gaps": self.record.data_gaps,
+            "data_request_sheet": self.record.data_request_sheet,
+        }
+
+    # -------------------------------------------------------------------------
+    # Step 2: accept engineer inputs and build workbook + memo
+    # -------------------------------------------------------------------------
+
+    def submit_engineer_inputs(self, engineer_inputs: dict[str, Any]) -> dict[str, Any]:
+        """Merge engineer-provided gap fills into state, then run workbook + memo."""
+        if not self.record or not self.claude_state:
+            raise RuntimeError("No active run")
+
+        self.claude_state.engineer_inputs = engineer_inputs
+        self.claude_state.save()
+        self.record.append_log(f"Engineer inputs received ({len(engineer_inputs)} value(s))")
+
+        return self.run_workbook_and_memo()
+
+    def run_workbook_and_memo(self) -> dict[str, Any]:
+        """Calls 2 and 3 — build workbook and write memo."""
+        if not self.record or not self.claude_state:
+            raise RuntimeError("No active run")
+
+        self.record.status = RunStatus.PRODUCTION
+        self._notify()
+
+        try:
+            self.record.append_log(f"Call 2/3 — {CALL_NAMES[1]}")
+            self._notify()
+            self.claude_state, _ = self.claude.run_workbook_build(self.claude_state)
+
+            self.record.append_log(f"Call 3/3 — {CALL_NAMES[2]}")
+            self._notify()
+            self.claude_state, memo_response = self.claude.run_memo_write(self.claude_state)
+
+            artifacts = self.claude.export_artifacts(
+                self.claude_state,
+                memo_response,
+                workbook_file_ids=self.claude_state.workbook_output_file_ids,
+            )
+            self.record.current_version = self.claude_state.iteration
+            self.record.last_artifacts = artifacts
+            self.record.status = RunStatus.COMPLETE
+            self.record.append_log(
+                f"Production complete — v{artifacts['version']}: "
+                f"memo={'yes' if artifacts.get('memo_path') else 'no'}, "
+                f"workbook={'yes' if artifacts.get('workbook_path') else 'no'}"
+            )
+            if artifacts.get("warnings"):
+                for w in artifacts["warnings"]:
+                    self.record.append_log(f"Warning: {w}")
+        except Exception as exc:
+            self.record.status = RunStatus.ERROR
+            self.record.error = str(exc)
+            self.record.append_log(f"Production error: {exc}")
+            raise
+        finally:
+            self._notify()
+
+        return self.record.last_artifacts
+
+    # -------------------------------------------------------------------------
+    # Legacy: run all 3 calls in one shot (skips gap-fill step)
+    # -------------------------------------------------------------------------
+
+    def run_production(self) -> dict[str, Any]:
+        """Run all 3 calls without pausing for engineer input (bypass mode)."""
+        if not self.record or not self.claude_state:
+            raise RuntimeError("No active run")
+
+        self.record.status = RunStatus.PRODUCTION
+        self.record.append_log("Starting Claude production (3 focused API calls — bypass gap-fill)")
         self._notify()
 
         try:
             self.record.append_log(f"Call 1/3 — {CALL_NAMES[0]}")
             self._notify()
             self.claude_state, _ = self.claude.run_assessment(self.claude_state)
+            self.record.data_gaps = self.claude_state.data_gaps
+            self.record.data_request_sheet = self.claude_state.data_request_sheet
+            if self.record.data_gaps:
+                self.record.append_log(
+                    f"Warning: {len(self.record.data_gaps)} missing input(s) — proceeding without engineer input"
+                )
 
             self.record.append_log(f"Call 2/3 — {CALL_NAMES[1]}")
             self._notify()
