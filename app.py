@@ -243,30 +243,61 @@ def render_gap_fill_form(record, manager: BCARunManager) -> None:
                         st.error(str(exc))
         return
 
-    required_gaps = [g for g in gaps if g.get("required", True)]
-    optional_gaps = [g for g in gaps if not g.get("required", True)]
+    RISK_COLORS = {"High": "🔴", "Medium": "🟡", "Low": "🟢"}
 
-    if required_gaps:
-        st.markdown("**Required**")
-        for gap in required_gaps:
-            label = gap.get("item", "Unknown input")
-            source_hint = gap.get("preferred_source", "")
-            help_text = f"Source: {source_hint}" if source_hint else ""
-            key = f"gap_{gap.get('json_path', label)}"
-            val = st.text_input(label, key=key, help=help_text, placeholder="e.g. 33.8")
-            if val.strip():
-                engineer_inputs[label] = val.strip()
+    # Sort: Critical driver gaps first, then Critical, then Optional
+    def gap_sort_key(g):
+        is_driver = g.get("is_benefit_driver", False)
+        crit = g.get("criticality", "Critical")
+        return (0 if crit == "Critical" and is_driver else 1 if crit == "Critical" else 2)
+
+    sorted_gaps = sorted(gaps, key=gap_sort_key)
+    critical_gaps = [g for g in sorted_gaps if g.get("criticality", "Critical") == "Critical"]
+    optional_gaps = [g for g in sorted_gaps if g.get("criticality", "Critical") != "Critical"]
+
+    def render_gap_input(gap: dict, key_prefix: str) -> tuple[str, str] | None:
+        label = gap.get("item", "Unknown input")
+        category = gap.get("category", "")
+        risk = gap.get("reviewer_risk", "")
+        risk_icon = RISK_COLORS.get(risk, "")
+        preferred = gap.get("preferred_for_review", "")
+        minimum = gap.get("minimum_acceptable", "")
+        source = gap.get("preferred_source", "")
+
+        caption_parts = []
+        if category:
+            caption_parts.append(f"**{category}**")
+        if risk:
+            caption_parts.append(f"{risk_icon} Reviewer risk: {risk}")
+        if caption_parts:
+            st.caption(" · ".join(caption_parts))
+
+        help_lines = []
+        if preferred:
+            help_lines.append(f"Preferred: {preferred}")
+        if minimum and minimum != preferred:
+            help_lines.append(f"Minimum acceptable: {minimum}")
+        if source:
+            help_lines.append(f"Source: {source}")
+        help_text = "\n".join(help_lines)
+
+        key = f"{key_prefix}_{label}"
+        val = st.text_input(label, key=key, help=help_text or None, placeholder="e.g. 33.8")
+        return (label, val.strip()) if val.strip() else None
+
+    if critical_gaps:
+        st.markdown("**Critical inputs** — required for the BCA to be calculable")
+        for gap in critical_gaps:
+            result = render_gap_input(gap, "gap_crit")
+            if result:
+                engineer_inputs[result[0]] = result[1]
 
     if optional_gaps:
-        with st.expander(f"Optional inputs ({len(optional_gaps)})"):
+        with st.expander(f"Optional inputs ({len(optional_gaps)}) — BCA is viable without these"):
             for gap in optional_gaps:
-                label = gap.get("item", "Unknown input")
-                source_hint = gap.get("preferred_source", "")
-                help_text = f"Source: {source_hint}" if source_hint else ""
-                key = f"gap_opt_{gap.get('json_path', label)}"
-                val = st.text_input(label, key=key, help=help_text, placeholder="(leave blank to skip)")
-                if val.strip():
-                    engineer_inputs[label] = val.strip()
+                result = render_gap_input(gap, "gap_opt")
+                if result:
+                    engineer_inputs[result[0]] = result[1]
 
     provided = len(engineer_inputs)
     needed = len(required_gaps)

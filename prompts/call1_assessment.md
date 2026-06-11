@@ -2,13 +2,20 @@ Read all attached USDOT reference files and project application documents carefu
 
 Your task is to produce a structured BCA specification by reasoning from the project's characteristics — not by filling in a generic template. The workbook-building step and memo-writing step work entirely from this JSON, so extract every number and never invent a value.
 
-**Read every page of every document.** Look for:
-- Traffic counts (AADT, peak hour, seasonal, by direction, by year)
-- Crash histories (every year reported, by severity, by location)
-- Cost breakdowns (by category, by year, federal vs. non-federal)
-- Engineering estimates (dimensions, capacities, design-life years)
-- Risk/resilience data (flood return periods, closure frequencies, detour distances)
+**Read every page of every document before doing anything else.** This is not optional. Look in every appendix, exhibit, attachment, and supplemental file for:
+- Traffic counts, AADT, peak hour volumes, seasonal factors, by direction, by year
+- Traffic studies, travel demand model outputs, Synchro/HCM/VISSIM outputs
+- Crash histories — every year, by severity, by location
+- Bridge inspection reports, NBI data, load posting history, asset management reports
+- Cost breakdowns by category, by year, federal vs. non-federal
+- Engineering estimates — dimensions, capacities, design-life years
+- Risk/resilience data — flood return periods, closure records, detour distances
+- Environmental documents (NEPA, EA, EIS) — often contain traffic and crash data
+- Prior BCAs or feasibility studies
+- CMF references or safety analyses
 - Any quantitative table in any appendix or exhibit
+
+**Do not flag a variable as missing until you have confirmed it is absent from ALL uploaded materials.**
 
 ---
 
@@ -16,13 +23,13 @@ Your task is to produce a structured BCA specification by reasoning from the pro
 
 **Do NOT estimate, assume, or invent any value not found in the uploaded documents.**
 
-If a required variable is missing from documents, set it to `null` and add it to `data_gaps`. A `null` is honest and defensible. An invented number looks plausible but will be challenged by a USDOT reviewer and can invalidate the BCA.
+If a required variable is missing, set it to `null` and add it to `data_gaps`. A `null` is honest and defensible. An invented number looks plausible but will be challenged by a USDOT reviewer.
 
 Source classification — label every value with exactly one:
 - `"Project Data"` — found explicitly in the uploaded project documents
 - `"Engineering Analysis"` — from a model output (HCM, Synchro, VISSIM, travel demand model) cited in the documents
-- `"Literature Source"` — from a named standard reference: USDOT BCA guidance, FHWA crash unit costs, USDOT Value of Time tables, EPA MOVES emissions factors, CMF Clearinghouse. These are always available and do not need to come from project documents.
-- `"Analyst Judgment"` — Claude is inferring this; not found in documents and not from a standard reference
+- `"Literature Source"` — from a named standard reference: USDOT BCA guidance, FHWA crash unit costs, USDOT Value of Time tables, EPA MOVES, CMF Clearinghouse. These are always available without project documents.
+- `"Analyst Judgment"` — Claude is inferring this; not in documents and not from a standard reference
 
 Minimize `"Analyst Judgment"`. Flag every one explicitly.
 
@@ -31,41 +38,58 @@ Minimize `"Analyst Judgment"`. Flag every one explicitly.
 ## Reasoning framework — follow these steps in order
 
 **Step 0 — Classify the project**
-Before evaluating any benefit category, identify what this project actually does at an engineering level. Record `project_classification` with:
-- `engineering_scope`: what physical work is being done (e.g. "bridge superstructure replacement and approach road widening", "signalized intersection capacity expansion", "new BRT corridor with dedicated lanes")
-- `primary_mechanisms`: the specific mechanisms by which this project could generate economic benefits (e.g. "eliminates load posting restriction that currently diverts trucks 4 miles", "reduces intersection delay from Level of Service F to C", "improves drainage to prevent recurrent flooding closures")
+Identify what this project physically does at an engineering level. Record `engineering_scope` and `primary_mechanisms` (the specific ways this project generates economic benefits). This classification drives every subsequent step.
 
-This classification drives everything that follows. Do not skip it.
+**Step 0.5 — Identify benefit drivers**
+Before evaluating individual categories, estimate which benefit categories are likely to account for more than 10% of total project benefits based on the project type and scope. Mark these as `is_benefit_driver: true`. For driver categories, require higher-quality evidence and apply more conservative assumptions. This mirrors how professional BCA economists prioritize their effort.
 
-**Step 1 — Does this category apply?**
-For each potential benefit category, decide whether this project's engineering scope and primary mechanisms could plausibly generate that benefit. Be conservative. Examples:
-- A bridge rehab without capacity expansion: travel time savings are unlikely unless there is evidence of delay caused by weight-restricted single-lane alternating traffic.
-- An at-grade crossing elimination: resilience applies if trains currently block traffic; safety applies if crashes are documented.
-- A rural bridge replacement: load-posting VOC benefit applies if the current bridge is posted or will be posted without replacement.
+Example reasoning: A bridge rehabilitation at a high-crash location with a load posting restriction — Safety and VOC are likely drivers. Travel time savings from 0.7 seconds of delay reduction will not be a driver.
 
-Only include categories the project's characteristics clearly support.
+**Step 1 — Does this category apply, and is it critical?**
+For each potential benefit category:
+- **Applicable?** Does this project's engineering scope and primary mechanisms plausibly generate this benefit? Be conservative.
+- **Critical or Optional?** Determine whether excluding this category entirely would make the BCR fall below 1.0 based on rough orders of magnitude. If the BCA remains clearly viable without this category (BCR likely > 1.0 from other categories alone), classify it as `"Optional"`. Do not hold up the BCA for Optional categories. Critical categories must be quantified; Optional categories should be quantified if data is available but should not block production.
 
-**Step 2 — What methodology fits this project?**
-For each applicable category, select the calculation approach that matches both the project type and the evidence likely to exist:
-- Travel Time: Rule-of-half from capacity model delay outputs (requires HCM/Synchro/VISSIM)? Direct from travel time study? Speed-distance calculation (only if a speed study exists)? Do not select a methodology that requires model outputs if no traffic model was run for this project.
-- Safety: CMF method (requires a CMF matched to the treatment type and facility type from CMF Clearinghouse)? Before/after count method? Identify what crash type and facility the CMF must cover.
-- VOC: Avoided load-posting detour (requires detour length, truck volume, load posting year)? Reduced congestion idling (requires speed profile change)? Reduced curvature/grade? Pick the mechanism the documents describe.
-- Resilience: Expected annual avoided closures × detour cost (requires closure frequency data)? Return-period event framework (requires FEMA/NOAA flood data)? Only if a specific hazard is documented.
+**Step 2 — Select methodology before requesting variables**
+For each applicable category, select the specific calculation approach that fits the project type AND the evidence likely to exist for this project. Different methodologies require entirely different variables — select first, then determine what you need.
 
-**Step 3 — What variables does that methodology require?**
-List every input variable the selected methodology needs. Be precise — "AADT by year 2025–2047 for the subject facility" not "traffic data." Include both project-specific variables (which must come from documents or the engineer) and standard values (which come from USDOT/FHWA literature).
+For each variable, distinguish:
+- `minimum_acceptable`: the lowest-quality data that still allows a defensible calculation (e.g., a speed estimate from posted speed limits)
+- `preferred_for_review`: what a USDOT reviewer would prefer to see (e.g., Synchro/HCM delay outputs by design year)
 
-**Step 4 — Extract from documents**
-Search every uploaded file for each project-specific required variable. Record the exact value, source document, and page/table/exhibit.
+If only minimum-acceptable data is available, note the reviewer risk. If preferred data is available, use it.
 
-**Step 5 — Flag missing project-specific variables**
-Any required project-specific variable not found in documents goes into `data_gaps`. Standard literature values (Value of Time, FHWA crash unit costs, EPA factors) do not go in `data_gaps` — they are always obtainable and should be filled in with `"Literature Source"` classification.
+**Step 3 — Determine required variables for the selected methodology**
+List every input variable the selected methodology needs. Be specific: not "traffic data" but "annual AADT for Marriottsville Road at the project intersection, 2025–2047." For each variable, note evidence strength even before searching.
+
+**Step 4 — Search exhaustively for each variable**
+Search every uploaded file for each required variable. Before recording a variable as `"found": false`, confirm you checked:
+- Main application narrative
+- All appendices and exhibits
+- Traffic studies or travel demand model outputs
+- Bridge inspection or engineering reports
+- Environmental documents (EA/EIS/FONSI)
+- Any prior BCA or feasibility study
+- Footnotes and references sections
+
+Record the exact value, source document name, and page/table/exhibit number.
+
+**Step 5 — Assign evidence strength and reviewer risk**
+For each required variable that was found, assign evidence strength:
+- `"High"` — directly stated in the document (e.g., crash count from state crash database, cost from engineer's estimate)
+- `"Medium"` — derived from a documented analysis (e.g., delay calculated from a referenced Synchro run)
+- `"Low"` — secondary reference or indirect (e.g., growth rate from a regional plan cited in the application)
+
+For each benefit category, assign `reviewer_risk`:
+- `"Low"` — all key variables are High or Medium evidence strength, methodology is standard
+- `"Medium"` — some variables are Low strength or the methodology involves minor judgment
+- `"High"` — this is a likely benefit driver but key variables are missing or methodology relies on Analyst Judgment
 
 **Step 6 — Can this category be calculated?**
-Set `"can_calculate": true` only if every required variable has a non-null value from one of:
+Set `"can_calculate": true` only if every required variable has a non-null value from:
 - Project documents (`"Project Data"` or `"Engineering Analysis"`)
-- A standard USDOT/FHWA reference (`"Literature Source"`)
-- Engineer-provided inputs listed at the top of the workbook prompt (these will be supplied after this step)
+- A standard USDOT/FHWA reference (`"Literature Source"`) — Value of Time, crash unit costs, emissions factors are always available
+- Engineer-provided inputs (these will be supplied via the Data Request Sheet after this step)
 
 If any project-specific variable is `null`, set `"can_calculate": false` and `"estimated_annual_benefit_M": 0.0`. Do not estimate.
 
@@ -74,7 +98,7 @@ If any project-specific variable is `null`, set `"can_calculate": false` and `"e
 ## Output format
 
 1. Output the JSON inside a ```json code fence.
-2. Write a plain-text summary (3–5 sentences: project type, applicable categories, template choice, estimated BCR range only if any categories are fully calculable from documents alone).
+2. Write a plain-text summary (3–5 sentences: project type, benefit drivers, reviewer risk areas, template choice).
 3. Output the Data Request Sheet between these exact markers:
 
 --- DATA REQUEST SHEET START ---
@@ -102,7 +126,7 @@ If any project-specific variable is `null`, set `"can_calculate": false` and `"e
   },
   "project_classification": {
     "engineering_scope": "what physical work is being done",
-    "primary_mechanisms": ["list of specific economic benefit mechanisms this project creates"]
+    "primary_mechanisms": ["specific economic benefit mechanisms this project creates"]
   },
   "economics": {
     "base_year": 2024,
@@ -127,14 +151,23 @@ If any project-specific variable is `null`, set `"can_calculate": false` and `"e
     {
       "category": "Travel Time Savings | Vehicle Operating Cost | Safety | Emissions | Freight Reliability | Resilience | Noise | other",
       "applicable": true,
-      "rationale": "why this category applies to this specific project based on its engineering scope and primary mechanisms",
+      "criticality": "Critical | Optional",
+      "criticality_reason": "why this category is critical or optional to the BCA's viability",
+      "is_benefit_driver": false,
+      "rationale": "why this category applies to this specific project",
       "methodology": "the specific calculation methodology selected and why it fits this project type",
+      "reviewer_risk": "Low | Medium | High",
+      "reviewer_risk_reason": "what specifically creates reviewer risk — missing data, weak evidence, large benefit share, etc.",
       "required_variables": [
         {
           "variable": "human-readable variable name",
           "description": "what this is and why the methodology needs it",
+          "minimum_acceptable": "lowest-quality data that still allows a defensible calculation",
+          "preferred_for_review": "what a USDOT reviewer would prefer to see",
           "found": false,
           "value": null,
+          "evidence_strength": "High | Medium | Low | Missing",
+          "evidence_strength_reason": "why this strength rating was assigned",
           "source_citation": "document name and section/page/exhibit, or USDOT/FHWA reference, or null",
           "classification": "Project Data | Engineering Analysis | Literature Source | Analyst Judgment"
         }
@@ -152,12 +185,16 @@ If any project-specific variable is `null`, set `"can_calculate": false` and `"e
   },
   "data_gaps": [
     {
-      "item": "exact variable name, e.g. 'No-build average intersection delay (sec/vehicle), design year 2028'",
+      "item": "exact variable name",
       "category": "which benefit category this blocks",
-      "why_needed": "its specific role in the calculation — e.g. 'required for rule-of-half travel time calculation'",
-      "preferred_source": "where an engineer should obtain this — be specific, e.g. 'Synchro/HCM output for no-build scenario at the subject intersection', 'CMF Clearinghouse — search treatment type: bridge rail upgrade, facility: rural two-lane'",
+      "criticality": "Critical | Optional",
+      "why_needed": "its specific role in the calculation",
+      "minimum_acceptable": "what would at least allow calculation, if less than preferred",
+      "preferred_for_review": "what a USDOT reviewer would want to see",
+      "preferred_source": "where an engineer should get this — be specific",
       "required": true,
-      "input_type": "number | text | percent | years | table"
+      "input_type": "number | text | percent | years | table",
+      "documents_searched": ["list of document types confirmed absent — e.g. 'traffic study', 'Synchro output', 'bridge inspection report'"]
     }
   ]
 }
@@ -167,22 +204,24 @@ If any project-specific variable is `null`, set `"can_calculate": false` and `"e
 
 ## Data Request Sheet format
 
-After the JSON, output a markdown table between the markers. List only project-specific variables that are `null` — standard USDOT/FHWA values do not belong here. Required items first.
+Output a markdown table after the JSON, between the markers. List only project-specific variables that are `null`. Standard USDOT/FHWA values do not belong here. Sort: Critical driver categories first, then Critical non-drivers, then Optional.
 
-| # | Input Needed | Benefit Category | Why Needed | Where to Get It | Required? |
-|---|-------------|-----------------|-----------|----------------|-----------|
+| # | Input Needed | Category | Critical? | Min. Acceptable | Preferred | Where to Get It |
+|---|-------------|---------|-----------|----------------|-----------|----------------|
 
 ---
 
 ## Rules
 
-- **Never invent a project-specific value.** Missing → `null` + row in `data_gaps` + row in Data Request Sheet.
-- Standard USDOT/FHWA values (Value of Time, crash unit costs, emissions factors) use `"Literature Source"` and do not block `can_calculate`.
-- Set `can_calculate: false` and `estimated_annual_benefit_M: 0.0` for any category missing a project-specific variable.
+- **Never invent a project-specific value.** Missing → `null` + `data_gaps` entry + Data Request Sheet row.
+- **Confirm a variable is absent from ALL uploaded materials before flagging it missing.** Note which document types were searched.
+- Standard USDOT/FHWA values use `"Literature Source"` and do not block `can_calculate`.
+- `can_calculate: false` and `estimated_annual_benefit_M: 0.0` for any category missing a project-specific variable.
 - Only include benefit categories this project's `primary_mechanisms` clearly support.
+- Do not request variables for Optional categories unless they are also benefit drivers.
 - `"workbook_template"`: highway/bridge/road/capacity → `"example_workbook.xlsx"`; rail/transit/freight → `"guide_workbook.xlsm"`.
 - Do NOT monetize CO₂ per current USDOT/EO guidance.
 - Discount rate: 7.0% unless project documents specify otherwise.
 - Base year: 2024 constant dollars unless project documents specify otherwise.
 - All dollar values in millions (M). Rates as decimals (0.07 = 7%).
-- Capture everything in `raw_quantitative_data` that doesn't fit the schema above.
+- Capture everything in `raw_quantitative_data` that does not fit the schema above.
