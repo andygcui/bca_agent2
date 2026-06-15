@@ -33,6 +33,7 @@ def init_session() -> None:
         "project_file_bytes": [],
         "ingest_warnings": [],
         "max_iterations": 1,
+        "guideline": "build",
     }
     for key, val in defaults.items():
         if key not in st.session_state:
@@ -79,8 +80,9 @@ def _load_howard_county_sample() -> None:
 
 
 def render_reference_status() -> None:
+    guideline = st.session_state.get("guideline", "build")
     st.subheader("Reference Files")
-    docs = list_reference_documents()
+    docs = list_reference_documents(guideline=guideline)
     cols = st.columns(2)
     for i, doc in enumerate(docs):
         present = doc["present"] == "true"
@@ -90,13 +92,16 @@ def render_reference_status() -> None:
             unsafe_allow_html=True,
         )
 
-    tabs = get_guide_workbook_tabs()
+    tabs = get_guide_workbook_tabs(guideline=guideline)
     if tabs:
         with st.expander(f"Guide workbook tabs ({len(tabs)})"):
             st.code(", ".join(tabs), language=None)
 
-    if not references_ready():
-        st.error("Missing core reference files in data/. Copy guide_memo.pdf and guide_workbook.xlsm.")
+    if not references_ready(guideline=guideline):
+        if guideline == "bip":
+            st.error("Missing BIP reference files in data/bip/. Copy bip_guide.pdf and bip_workbook_example.xlsm.")
+        else:
+            st.error("Missing core reference files in data/. Copy guide_memo.pdf and guide_workbook.xlsm.")
 
 
 def render_run_controls() -> None:
@@ -125,6 +130,7 @@ def render_run_controls() -> None:
                 st.session_state.project_files,
                 st.session_state.get("project_file_bytes", []),
                 max_iterations=st.session_state.max_iterations,
+                guideline=st.session_state.get("guideline", "build"),
             )
             with st.spinner("Claude reading documents and identifying missing data…"):
                 try:
@@ -149,6 +155,7 @@ def render_run_controls() -> None:
                 st.session_state.project_files,
                 st.session_state.get("project_file_bytes", []),
                 max_iterations=st.session_state.max_iterations,
+                guideline=st.session_state.get("guideline", "build"),
             )
             with st.spinner("Claude running all 3 phases (bypass mode)…"):
                 try:
@@ -412,11 +419,31 @@ def main() -> None:
     st.set_page_config(page_title="BCA Agent", layout="wide")
     init_session()
 
-    st.title("BCA Agent")
-    st.caption("Evidence-first USDOT BUILD BCA — Claude extracts data, engineer fills gaps, Claude builds the BCA")
+    guideline = st.session_state.get("guideline", "build")
+    if guideline == "bip":
+        st.title("BCA Agent — BIP Bridge Project")
+        st.caption("Evidence-first FHWA BIP BCA — Claude extracts data, engineer fills gaps, Claude fills the BIP BCA Tool workbook")
+    else:
+        st.title("BCA Agent")
+        st.caption("Evidence-first USDOT BUILD BCA — Claude extracts data, engineer fills gaps, Claude builds the BCA")
 
     with st.sidebar:
         st.header("Settings")
+
+        guideline_options = {
+            "USDOT BUILD / RAISE / INFRA / MEGA / CRISI": "build",
+            "BIP — Bridge Investment Program": "bip",
+        }
+        selected_label = st.radio(
+            "BCA Guideline",
+            options=list(guideline_options.keys()),
+            index=0 if st.session_state.get("guideline", "build") == "build" else 1,
+            help="SELECT before uploading files. Determines which prompts, reference files, and workbook template are used.",
+        )
+        st.session_state.guideline = guideline_options[selected_label]
+
+        st.divider()
+
         st.session_state.max_iterations = st.number_input(
             "Max review iterations",
             min_value=1,
@@ -426,7 +453,8 @@ def main() -> None:
         )
         st.text_input("Claude model", value=settings.claude_model, disabled=True)
         st.text_input("Claude review model", value=settings.claude_review_model, disabled=True)
-        st.text_input("Workbook mode", value=settings.reference_workbook_mode, disabled=True)
+        if st.session_state.guideline == "build":
+            st.text_input("Workbook mode", value=settings.reference_workbook_mode, disabled=True)
 
         st.divider()
 

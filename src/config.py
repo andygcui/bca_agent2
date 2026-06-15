@@ -41,5 +41,14 @@ class Settings:
         "example_workbook.xlsx",
     )
 
+    # BIP guideline
+    bip_data_dir: Path = _ROOT / "data" / "bip"
+    bip_reference_filenames: tuple[str, ...] = (
+        "bip_guide.pdf",
+        "bip_workbook_example.xlsm",
+    )
+    bip_workbook_template: str = "bip_workbook_example.xlsm"
+    bip_bridge_tab: str = os.getenv("BIP_BRIDGE_TAB", "Example Bridge")
+
 
 settings = Settings()

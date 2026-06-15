@@ -9,6 +9,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
 
+import traceback
+
 from src.claude_client import CALL_NAMES, ClaudeBCAClient, ClaudeRunState
 from src.config import settings
 from src.claude_reviewer import ClaudeReviewer
@@ -43,6 +45,7 @@ class RunRecord:
     data_gaps: list[dict[str, Any]] = field(default_factory=list)
     data_request_sheet: str = ""
     log: list[str] = field(default_factory=list)
+    guideline: str = "build"
 
     def append_log(self, msg: str) -> None:
         ts = datetime.now(timezone.utc).strftime("%H:%M:%S")
@@ -74,6 +77,7 @@ class BCARunManager:
         project_file_bytes: list[tuple[str, bytes]] | None = None,
         *,
         max_iterations: int = 1,
+        guideline: str = "build",
     ) -> RunRecord:
         run_id = self.claude.new_run_id()
         run_dir = settings.runs_dir / run_id
@@ -92,13 +96,18 @@ class BCARunManager:
             project_text=project_text,
             project_files=project_files,
             max_iterations=max_iterations,
+            guideline=guideline,
         )
         self.claude_state = self.claude.start_production(
             run_dir,
             file_bytes,
             project_file_names=project_files,
+            guideline=guideline,
         )
-        self.record.append_log(f"Created run {run_id} ({len(file_bytes)} project file(s) uploaded to Anthropic)")
+        self.record.append_log(
+            f"Created run {run_id} ({len(file_bytes)} project file(s) uploaded to Anthropic) "
+            f"[guideline: {guideline}]"
+        )
         self._notify()
         return self.record
 
@@ -209,6 +218,7 @@ class BCARunManager:
             self.record.status = RunStatus.ERROR
             self.record.error = str(exc)
             self.record.append_log(f"Production error: {exc}")
+            self.record.append_log(traceback.format_exc())
             raise
         finally:
             self._notify()

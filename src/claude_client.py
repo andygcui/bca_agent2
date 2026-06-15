@@ -32,6 +32,7 @@ from src.anthropic_files import (
 from src.config import settings
 from src.memo_export import extract_memo_from_text, markdown_to_docx
 from src.reference_docs import get_guide_workbook_tabs
+from src.anthropic_files import BIP_REFERENCE_FILES
 from src.workbook_export import apply_patches_to_workbook, extract_patches_from_text
 
 logger = logging.getLogger(__name__)
@@ -105,6 +106,8 @@ class ClaudeRunState:
     data_gaps: list[dict[str, Any]] = field(default_factory=list)
     data_request_sheet: str = ""
     engineer_inputs: dict[str, Any] = field(default_factory=dict)
+    # guideline: "build" or "bip"
+    guideline: str = "build"
 
     def save(self) -> None:
         self.run_dir.mkdir(parents=True, exist_ok=True)
@@ -127,6 +130,7 @@ class ClaudeRunState:
                     "data_gaps": self.data_gaps,
                     "data_request_sheet": self.data_request_sheet,
                     "engineer_inputs": self.engineer_inputs,
+                    "guideline": self.guideline,
                     "messages": self.messages,
                 },
                 indent=2,
@@ -157,6 +161,7 @@ class ClaudeRunState:
             data_gaps=data.get("data_gaps", []),
             data_request_sheet=data.get("data_request_sheet", ""),
             engineer_inputs=data.get("engineer_inputs", {}),
+            guideline=data.get("guideline", "build"),
         )
 
 
@@ -192,8 +197,9 @@ class ClaudeBCAClient:
         self,
         run_dir: Path,
         project_files: list[tuple[str, bytes]],
+        guideline: str = "build",
     ) -> list[UploadedFile]:
-        refs = upload_reference_files(self.client)
+        refs = upload_reference_files(self.client, guideline=guideline)
         projects = upload_project_files(self.client, project_files) if project_files else []
         all_uploaded = refs + projects
         save_upload_manifest(run_dir, all_uploaded)
@@ -314,11 +320,12 @@ auditable BCA that a professional transportation economist would defend under re
         run_dir: Path,
         project_files: list[tuple[str, bytes]],
         project_file_names: list[str] | None = None,
+        guideline: str = "build",
     ) -> ClaudeRunState:
         run_id = run_dir.name
-        state = ClaudeRunState(run_id=run_id, run_dir=run_dir, iteration=1)
+        state = ClaudeRunState(run_id=run_id, run_dir=run_dir, iteration=1, guideline=guideline)
 
-        uploaded = self._upload_run_files(run_dir, project_files)
+        uploaded = self._upload_run_files(run_dir, project_files, guideline=guideline)
         state.uploaded_files = [
             {"name": u.name, "file_id": u.file_id, "role": u.role} for u in uploaded
         ]
@@ -332,7 +339,11 @@ auditable BCA that a professional transportation economist would defend under re
 
     def run_assessment(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
         """Call 1: read all files → structured JSON project spec + data request sheet."""
-        prompt = (settings.prompts_dir / "call1_assessment.md").read_text(encoding="utf-8")
+        if state.guideline == "bip":
+            prompt_path = settings.prompts_dir / "bip" / "call1_assessment.md"
+        else:
+            prompt_path = settings.prompts_dir / "call1_assessment.md"
+        prompt = prompt_path.read_text(encoding="utf-8")
         all_files = self._get_uploaded_files(state)
 
         content: list[dict[str, Any]] = [{"type": "text", "text": prompt}]
@@ -359,7 +370,12 @@ auditable BCA that a professional transportation economist would defend under re
         return state, response_text
 
     def run_workbook_build(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
-        """Call 2: spec + template workbook → build workbook via code execution."""
+        """Call 2: spec + template workbook → build/fill workbook via code execution."""
+        if state.guideline == "bip":
+            return self._run_bip_workbook_build(state)
+        return self._run_build_workbook_build(state)
+
+    def _run_build_workbook_build(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
         spec_dict: dict[str, Any] = {}
         if state.project_spec:
             try:
@@ -384,7 +400,7 @@ auditable BCA that a professional transportation economist would defend under re
                 and f.role != "Project application material"
             ]
 
-        valid_tabs = "\n".join(get_guide_workbook_tabs())
+        valid_tabs = "\n".join(get_guide_workbook_tabs(guideline="build"))
         skill_md = (settings.prompts_dir / "SKILL.md").read_text(encoding="utf-8")
         prompt_template = (settings.prompts_dir / "call2_workbook.md").read_text(encoding="utf-8")
         prompt = (
@@ -410,12 +426,56 @@ auditable BCA that a professional transportation economist would defend under re
         state.save()
         return state, response_text
 
+    def _run_bip_workbook_build(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
+        all_files = self._get_uploaded_files(state)
+        template_name = settings.bip_workbook_template
+        template_files = [f for f in all_files if f.name == template_name]
+        if not template_files:
+            logger.warning(
+                "BIP template %s not found; attaching all BIP workbooks", template_name
+            )
+            template_files = [
+                f for f in all_files
+                if Path(f.name).suffix.lower() in {".xlsx", ".xlsm"}
+                and f.role != "Project application material"
+            ]
+
+        skill_md = (settings.prompts_dir / "SKILL.md").read_text(encoding="utf-8")
+        prompt_template = (settings.prompts_dir / "bip" / "call2_workbook.md").read_text(encoding="utf-8")
+        # Use manual replacement — the prompt contains {row} in code examples
+        # which would cause KeyError if we used .format()
+        bip_prompt = (
+            prompt_template
+            .replace("{project_spec}", state.project_spec or "(no spec available)")
+            .replace("{engineer_inputs}", _format_engineer_inputs(state.engineer_inputs))
+            .replace("{bridge_tab}", settings.bip_bridge_tab)
+        )
+        prompt = skill_md + "\n\n---\n\n" + bip_prompt
+
+        content: list[dict[str, Any]] = [{"type": "text", "text": prompt}]
+        content.extend(build_file_attachment_blocks(template_files))
+
+        response_text, _, output_file_ids = self._fresh_call(state, content)
+
+        state.workbook_output_file_ids = output_file_ids
+        state.last_output_file_ids = output_file_ids
+        state.workbook_results = _extract_workbook_results(response_text)
+        state.phases_completed = max(state.phases_completed, 4)
+        self._save_phase_response(state, 4, response_text)
+        state.save()
+        return state, response_text
+
     def run_memo_write(self, state: ClaudeRunState) -> tuple[ClaudeRunState, str]:
         """Call 3: spec + workbook results → write BCA memo."""
         all_files = self._get_uploaded_files(state)
-        style_files = [f for f in all_files if f.name in {"example_memo.pdf", "guide_memo.pdf"}]
 
-        prompt_template = (settings.prompts_dir / "call3_memo.md").read_text(encoding="utf-8")
+        if state.guideline == "bip":
+            style_files = [f for f in all_files if f.name == "bip_guide.pdf"]
+            prompt_template = (settings.prompts_dir / "bip" / "call3_memo.md").read_text(encoding="utf-8")
+        else:
+            style_files = [f for f in all_files if f.name in {"example_memo.pdf", "guide_memo.pdf"}]
+            prompt_template = (settings.prompts_dir / "call3_memo.md").read_text(encoding="utf-8")
+
         prompt = prompt_template.format(
             project_spec=state.project_spec or "(no spec available)",
             workbook_results=state.workbook_results

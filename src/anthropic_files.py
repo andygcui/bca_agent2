@@ -35,6 +35,11 @@ REFERENCE_FILES = (
     ("example_workbook.xlsx", "Example highway workbook (structure/style only)"),
 )
 
+BIP_REFERENCE_FILES = (
+    ("bip_guide.pdf", "FHWA BIP BCA Tool User Manual v1.1.2 (authoritative methodology)"),
+    ("bip_workbook_example.xlsm", "BIP BCA Tool workbook template (pre-configured with NBI data)"),
+)
+
 SPREADSHEET_SUFFIXES = {".xlsx", ".xlsm", ".xls", ".csv"}
 
 
@@ -89,10 +94,20 @@ def upload_bytes(client: anthropic.Anthropic, name: str, data: bytes) -> Uploade
     )
 
 
-def upload_reference_files(client: anthropic.Anthropic) -> list[UploadedFile]:
+def upload_reference_files(
+    client: anthropic.Anthropic,
+    guideline: str = "build",
+) -> list[UploadedFile]:
+    if guideline == "bip":
+        file_list = BIP_REFERENCE_FILES
+        base_dir = settings.bip_data_dir
+    else:
+        file_list = REFERENCE_FILES
+        base_dir = settings.data_dir
+
     uploaded: list[UploadedFile] = []
-    for filename, role in REFERENCE_FILES:
-        path = settings.data_dir / filename
+    for filename, role in file_list:
+        path = base_dir / filename
         if not path.exists():
             logger.warning("Reference file missing: %s", path)
             continue
